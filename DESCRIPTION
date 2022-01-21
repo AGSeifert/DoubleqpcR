@@ -15,4 +15,5 @@ Imports:
   outliers,
   ggplot2,
   reshape2,
-  knitr
+  knitr,
+  drc
