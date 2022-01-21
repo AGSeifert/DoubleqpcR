@@ -17,6 +17,8 @@ The input data has to be in csv format (or for downstream analysis a R dataframe
   - Fluorescence table: raw fluorescence qPCR curve data (optional for some parts)
   - Cq Table: a table with the two primer samples / concentration and optional Cq values
 
+** Per analysis only 1 Table of each is considerd ** This means that if you have to combine your csv files before and make sure the wells are named individually. (in future versions this will be adressed, but for now it is what it is).
+
 Example fluorescence data:
 
 | Cycle | A1 | A2 |
@@ -34,6 +36,7 @@ Example Cq Table:
 
 Important: the names of individual wells have to be coherent in both tables.
 
+Sample is normally the experiment. It needs to be set to a number if later used in regression. !careful!
 TODO: check further requirements
 
 ### Functions / Workflow
