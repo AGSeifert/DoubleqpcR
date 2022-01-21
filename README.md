@@ -27,7 +27,7 @@ Example fluorescence data:
 
 Example Cq Table:
 
-| type | conc | well | "Cq value type1" | "Cq value type2" | ... |
+| type | sample | well | "Cq value type1" | "Cq value type2" | ... |
 | ---  | ---  | ---  | ---              | ---              | --- |
 | gen A | 100 | A1   | 17.2             | 18.0             | ... |
 | gen B | 0   | B1   | 2.5              | 3.0              | ... |
