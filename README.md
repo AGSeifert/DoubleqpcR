@@ -41,6 +41,12 @@ TODO: check further requirements
 
 ### Functions / Workflow
 
+#### Input
+
+#### Cq calculation
+
+- calCq() can calculate Cq values based on second / third derivative of an fitted drc model.
+
 #### qCPR curves
 
 #### Cq plots
