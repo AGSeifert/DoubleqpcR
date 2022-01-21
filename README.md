@@ -27,10 +27,10 @@ Example fluorescence data:
 
 Example Cq Table:
 
-| well | concentration | "Cq value type1" | "Cq value type2" |
-| --- | --- | --- | --- |
-| A1  | 100 | 17.2 | 18.0 |
-| A2  | 0 | 2.9 | 2.1 |
+| type | conc | well | "Cq value type1" | "Cq value type2" | ... |
+| ---  | ---  | ---  | ---              | ---              | --- |
+| gen A | 100 | A1   | 17.2             | 18.0             | ... |
+| gen B | 0   | B1   | 2.5              | 3.0              | ... |
 
 Important: the names of individual wells have to be coherent in both tables.
 
