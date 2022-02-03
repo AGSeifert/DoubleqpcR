@@ -14,8 +14,11 @@ read.fluorescenceTable(csv, sep = ",", dec = ",")
 \item{dec}{decimals as "," or "." or ...}
 }
 \value{
-returns a data frame of fluorescence values.
+does not return! input.raw and input.raw.melt data frames will be saved to global.
 }
 \description{
 This function is a wrapper for read.csv
+The input.raw and input.raw.melt data frames will be saved to global scope.
+Rigth now you only can have 1 table for 1 analyis. You can consider to add more values manually or combine the csv files beforehand. Make sure the wells are named individually.
+The first column need to be called "Cycle"!
 }

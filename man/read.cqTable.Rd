@@ -14,9 +14,16 @@ read.cqTable(csv, sep = ",", dec = ",")
 \item{dec}{decimals as "," or "." or ...}
 }
 \value{
-returns a data frame of cq values.
+does not return! input.cq data frame will be saved to global.
 }
 \description{
 This function is a wrapper for read.csv
-#'
+}
+\details{
+First three needs to be 'type','sample','well'
+Type is the genotype or refers to the 2 primers. There have to be only 2!
+Sample is the analysed concentration, or experiment. If you want to use the regression fct. these need to be numbers (eg. 0\%-100\%)
+Well is the well, and it need to be the same as in the fluorescence data, if used.
+
+The following columns are the Cq vales. The column name will be used as Cq name reference.
 }
