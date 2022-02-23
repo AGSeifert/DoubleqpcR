@@ -20,6 +20,12 @@ read.fluorescenceTable <- function(csv, sep = ",", dec=","){
   }
 
   input.raw.melt <<- melt(input.raw, id.vars = "Cycle")
+  if(exists("input.cq")){
+    input.raw.melt.usedOnly <<- input.raw.melt[input.raw.melt$variable %in% input.cq$well,]
+  } else {
+    warning("No input.cq found. Therfore .usedOnly Table is only a copy from input.raw.melt! Rerun after read.cqTable()!")
+    input.raw.melt.usedOnly <<- input.raw.melt
+  }
 }
 
 
@@ -46,6 +52,10 @@ read.cqTable <- function(csv, sep = ",", dec=","){
   if (colnames(input.cq[1]) != "type" | colnames(input.cq[2]) != "sample" | colnames(input.cq[3]) != "well" ){
     warning("Table does not colnames correct! First three needs to be 'type','sample','well'. Renaming, but not checking anything! Please manually check.")
     colnames(input.cq)[1:3] <<- c("type", "sample", "well")
+  }
+
+  if (length(unique(input.cq$type)) != 2) {
+    warning("There are not two genotypes present in the data. This may cause massive trouble! Maybe misspelled?")
   }
 
 }
