@@ -11,6 +11,10 @@ Install with devtools, tough I will recommend to clone the repository and work w
 
 ## Documentation
 
+
+![overview drawio](https://user-images.githubusercontent.com/73955527/155363318-9657da5a-cbe0-4fc8-a179-aaa85b06a91a.png)
+
+
 ### Input Data
 
 The input data has to be in csv format (or for downstream analysis a R dataframe). Two types are needed:
@@ -43,11 +47,19 @@ TODO: check further requirements
 
 #### Input
 
+- `read.cqTable()` will read the Cq table.
+- `read.fluorescenceTable()` will read the fluorescence data.
+
+> only .csv at this point. 
+
 #### Cq calculation
 
-- calCq() can calculate Cq values based on second / third derivative of an fitted drc model.
+- `calc.Cq()` can calculate Cq values based on second / third derivative of an fitted drc model.
+- `calc.Cq.qpcR()` is the same but with the qpcR package.
 
 #### qCPR curves
+
+- `plot.curve()` will plot all or per sample Amplification curves
 
 #### Cq plots
 
@@ -59,6 +71,7 @@ Packages used:
 - qpcr
 - caret
 - outliers
+- ggplot2
 
 ## Cite
 (TODO)
