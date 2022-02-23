@@ -9,11 +9,14 @@ License: use_mit_license()
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Depends:
+    qpcR
 Imports:
 	caret,
-  investr,
-  outliers,
-  ggplot2,
-  reshape2,
-  knitr,
-  drc
+    investr,
+    outliers,
+    ggplot2,
+    reshape2,
+    knitr,
+    drc,
+    
