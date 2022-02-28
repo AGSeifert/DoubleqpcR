@@ -1,13 +1,14 @@
 #' plot fluorescence curves
 #'
 #' @import ggplot2
-#' @param sample specify the sample from input.cq std: "all" will plot all curves.
+#' @param sample specify the sample from input.cq std: "all" will plot all curves. Can be Numeric e.g. 100 for dilution series etc. Can be Character e.g. "100" for a normal experiment.
 #' @param target the target genotype "genotype A".
 #' @param color.target The color for the target genotype curve (only if not all curves are plotted)
 #' @param color.offtarget The color for the other genotype curve (only if not all curves are plotted)
 #' @return a ggplot object
 #' @export
 plot.curve <- function(sample = "all", target = "Genotype A", color.target = "firebrick2", color.offtarget = "cornflowerblue"){
+  if(!is.na(sample)){
   if(sample == "all"){
     plot <- ggplot(input.raw.melt.usedOnly, aes(x = Cycle, y = value, col = variable)) +
       geom_point(size=1, shape=20) +
@@ -24,6 +25,14 @@ plot.curve <- function(sample = "all", target = "Genotype A", color.target = "fi
       stop("No such sample present in the data.")
     }
 
+
+    # initialize Genotypes
+    if(!any(unique(input.cq$type) == target)){
+      stop("Target genotype not present!")
+    }
+    if(!length(unique(input.cq$type)) == 2){
+      stop("More then two genotypes present. Check spelling?")
+    }
     offtarget <- "Genotype B"
     for(genotype in unique(input.cq$type)) {
       if (genotype != target) {
@@ -38,10 +47,17 @@ plot.curve <- function(sample = "all", target = "Genotype A", color.target = "fi
     containing.label[annotation.label[1]] <- paste(containing.label[annotation.label[1]], "-", target)
     containing.label[annotation.label[2]] <- paste(containing.label[annotation.label[2]], "-", offtarget)
 
+    if(is.numeric(sample)){
+      subt <- paste0("Experiment: ", sample, "% ", target , " : ", 100-as.numeric(sample), "% ", offtarget)
+    } else {
+      subt <- paste0("Experiment: ", sample)
+    }
+
+
     plot <- ggplot(input.raw.melt.usedOnly[input.raw.melt.usedOnly$variable %in% containing,], aes(Cycle, value, col=variable)) +
       geom_point(size=1, shape=20) +
       geom_line() +
-      labs(x = "Cycle number", y = "Fluorescence", title = "Amplification Curves", subtitle = paste0("Experiment: ", sample, "% ", target , " : ", 100-as.numeric(sample), "% ", offtarget)) +
+      labs(x = "Cycle number", y = "Fluorescence", title = "Amplification Curves", subtitle = subt) +
       xlim(0,max(input.raw.melt.usedOnly$Cycle)) +
       ylim(min(input.raw.melt.usedOnly$value),pretty(max(input.raw.melt.usedOnly$value))[2]) +
       theme_light() +
@@ -51,4 +67,8 @@ plot.curve <- function(sample = "all", target = "Genotype A", color.target = "fi
   }
 
   return(plot)
+
+  } else {
+    stop("NA sample can not be plotted.")
+  }
 }

@@ -4,7 +4,7 @@
 \alias{read.cqTable}
 \title{Load cq table}
 \usage{
-read.cqTable(csv, sep = ",", dec = ",")
+read.cqTable(csv, sep = ",", dec = ",", forceCommaToPoint = TRUE)
 }
 \arguments{
 \item{csv}{Path to the input csv table}
@@ -12,6 +12,8 @@ read.cqTable(csv, sep = ",", dec = ",")
 \item{sep}{cell separator "," "." or ...}
 
 \item{dec}{decimals as "," or "." or ...}
+
+\item{forceCommaToPoint}{This will ensure all comma are forced to points in the Sample column!}
 }
 \value{
 does not return! input.cq data frame will be saved to global.

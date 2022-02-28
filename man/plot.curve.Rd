@@ -12,7 +12,7 @@ plot.curve(
 )
 }
 \arguments{
-\item{sample}{specify the sample from input.cq std: "all" will plot all curves.}
+\item{sample}{specify the sample from input.cq std: "all" will plot all curves. Can be Numeric e.g. 100 for dilution series etc. Can be Character e.g. "100" for a normal experiment.}
 
 \item{target}{the target genotype "genotype A".}
 

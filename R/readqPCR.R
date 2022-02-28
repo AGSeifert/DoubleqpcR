@@ -43,15 +43,20 @@ read.fluorescenceTable <- function(csv, sep = ",", dec=","){
 #' @param csv Path to the input csv table
 #' @param sep cell separator "," "." or ...
 #' @param dec decimals as "," or "." or ...
+#' @param forceCommaToPoint This will ensure all comma are forced to points in the Sample column!
 #' @return does not return! input.cq data frame will be saved to global.
 #' @export
-read.cqTable <- function(csv, sep = ",", dec=","){
+read.cqTable <- function(csv, sep = ",", dec=",", forceCommaToPoint = TRUE){
 
-  input.cq <<- read.csv(csv, sep=sep, dec=dec, numerals = "warn.loss", na.strings=c("NA","N/A", " "))
+  input.cq <<- read.csv(csv, sep=sep, dec=dec, numerals = "warn.loss", na.strings=c("NA","N/A", " "), strip.white = TRUE)
 
   if (colnames(input.cq[1]) != "type" | colnames(input.cq[2]) != "sample" | colnames(input.cq[3]) != "well" ){
     warning("Table does not colnames correct! First three needs to be 'type','sample','well'. Renaming, but not checking anything! Please manually check.")
     colnames(input.cq)[1:3] <<- c("type", "sample", "well")
+  }
+
+  if (forceCommaToPoint) {
+    input.cq$sample <<- gsub(",",".",input.cq$sample)
   }
 
   if (length(unique(input.cq$type)) != 2) {
