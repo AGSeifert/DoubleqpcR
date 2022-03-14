@@ -12,7 +12,7 @@ Install with devtools, tough I will recommend to clone the repository and work w
 ## Documentation
 
 
-![overview drawio](https://user-images.githubusercontent.com/73955527/155363318-9657da5a-cbe0-4fc8-a179-aaa85b06a91a.png)
+![overview drawio](https://user-images.githubusercontent.com/73955527/158216595-33eb708e-d592-4e61-9b04-5c290416aa41.png)
 
 
 ### Input Data
@@ -47,21 +47,36 @@ TODO: check further requirements
 
 #### Input
 
+##### Data Handling
+
 - `read.cqTable()` will read the Cq table.
 - `read.fluorescenceTable()` will read the fluorescence data.
 
 > only .csv at this point. 
 
-#### Cq calculation
+##### Cq calculation
 
 - `calc.Cq()` can calculate Cq values based on second / third derivative of an fitted drc model.
 - `calc.Cq.qpcR()` is the same but with the qpcR package.
 
-#### qCPR curves
+##### qCPR curves
 
 - `plot.curve()` will plot all or per sample Amplification curves
 
+##### Cq Value table
+
+- `table.Cq()` gives an overview of the Cq values (outliers can be removed)
+
+#### Make Data Object for further analasys
+
+- `make.Cq.data()` will generate the main list of dataframes (outliers can be removed)
+- `mean.Cq.data()` will generate a summery of the data (mean and sd)
+
+> The connection to fluorescence data will be cut at this point.
+
 #### Cq plots
+
+- `plot.Cq()`
 
 ## References
 Packages used:  
