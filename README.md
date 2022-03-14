@@ -70,7 +70,7 @@ TODO: check further requirements
 #### Make Data Object for further analasys
 
 - `make.Cq.data()` will generate the main list of dataframes (outliers can be removed)
-- `mean.Cq.data()` will generate a summery of the data (mean and sd)
+- `Cq.data.mean()` will generate a summery of the data (mean and sd)
 
 > The connection to fluorescence data will be cut at this point.
 
