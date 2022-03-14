@@ -12,7 +12,8 @@ table.Cq(
   alpha = 0.05,
   outlier.range = 3,
   decimals = 3,
-  format = "kable"
+  format = "kable",
+  silent = FALSE
 )
 }
 \arguments{
@@ -22,7 +23,7 @@ table.Cq(
 
 \item{CqType}{wich Cq values should be used. This can be a vector!}
 
-\item{outliers}{logical if outliers are to be deleted from the ?}
+\item{outliers}{logical if outliers are to be deleted from the output}
 
 \item{alpha}{alpha for outlier testing (0.05 = 95\% significance)}
 
@@ -30,7 +31,9 @@ table.Cq(
 
 \item{decimals}{decimals for the resulting table}
 
-\item{format}{How the table will be formated. possible are "kable" and "DT" (work in progress) or anything else for pure data.}
+\item{format}{How the table will be formated. possible are "kable" and "DT" (work in progress) or "data" for pure dataframe, "fulldata" for a dataframe with difference, mean, and sd. Or any other input will give just the table.}
+
+\item{silent}{should status be printed? (mostly for outlier detection)}
 }
 \value{
 returns a table with the delta Cq values with mean and standard deviation.

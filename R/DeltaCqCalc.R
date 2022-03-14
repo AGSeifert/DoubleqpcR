@@ -9,14 +9,15 @@
 #' @param sample specify the sample from input.cq
 #' @param target the target genotype "genotype A".
 #' @param CqType wich Cq values should be used. This can be a vector!
-#' @param outliers logical if outliers are to be deleted from the ?
+#' @param outliers logical if outliers are to be deleted from the output
 #' @param alpha alpha for outlier testing (0.05 = 95% significance)
 #' @param outlier.range This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test shoud happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.
 #' @param decimals decimals for the resulting table
-#' @param format How the table will be formated. possible are "kable" and "DT" (work in progress) or anything else for pure data.
+#' @param format How the table will be formated. possible are "kable" and "DT" (work in progress) or "data" for pure dataframe, "fulldata" for a dataframe with difference, mean, and sd. Or any other input will give just the table.
+#' @param silent should status be printed? (mostly for outlier detection)
 #' @return returns a table with the delta Cq values with mean and standard deviation.
 #' @export
-table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), outliers = TRUE, alpha = 0.05, outlier.range = 3, decimals = 3, format = "kable"){
+table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), outliers = TRUE, alpha = 0.05, outlier.range = 3, decimals = 3, format = "kable", silent = FALSE){
   # Control the input:
   if(is.na(sample)){
     stop("Not a valid sample.")
@@ -64,17 +65,22 @@ table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), 
   result.table <- data.frame(matrix(ncol=0, nrow=data.length))
 
   for (type.n in CqType) {
-    containing.A.value <- eval(parse(text = paste0("input.cq$", type.n, "[input.cq$well %in% containing.A & input.cq$sample ==", sample,"]")))
-    containing.B.value <- eval(parse(text = paste0("input.cq$", type.n, "[input.cq$well %in% containing.B & input.cq$sample ==", sample,"]")))
+    containing.A.value <- eval(parse(text = paste0("input.cq$", type.n, "[input.cq$well %in% containing.A & input.cq$sample == '", sample,"']")))
+    containing.B.value <- eval(parse(text = paste0("input.cq$", type.n, "[input.cq$well %in% containing.B & input.cq$sample == '", sample,"']")))
 
     # Outlier detection:
     if (outliers){
-      containing.A.value <- voges_dixon(data = containing.A.value, outlier.range = outlier.range, alpha = alpha)
-      containing.B.value <- voges_dixon(data = containing.B.value, outlier.range = outlier.range, alpha = alpha)
+      containing.A.value <- voges_dixon(data = containing.A.value, outlier.range = outlier.range, alpha = alpha, silent = silent)
+      containing.B.value <- voges_dixon(data = containing.B.value, outlier.range = outlier.range, alpha = alpha, silent = silent)
     }
 
     result.table[,paste0(type.n, ".", target)] <- containing.A.value
     result.table[,paste0(type.n, ".", offtarget)] <- containing.B.value
+  }
+
+  # leave function if only dataframe is wanted!
+  if (tolower(format) == "data"){
+    return(result.table)
   }
 
   # Calculate mean and sd:
@@ -85,6 +91,11 @@ table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), 
   # Calculate Differences:
   for (type.n in CqType) {
     result.table[,paste0("diff.", type.n)] <- as.numeric(c(rep(NA,data.length),result.table["mean",paste0(type.n,".",target)]-result.table["mean",paste0(type.n,".",offtarget)], result.table["sd",paste0(type.n,".",target)]+result.table["sd",paste0(type.n,".",offtarget)]))
+  }
+
+  # leave function if only dataframe is wanted!
+  if (tolower(format) == "fulldata"){
+    return(result.table)
   }
 
   #Format the Diffs in a copied table
@@ -123,7 +134,7 @@ table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), 
   result.table.format <- result.table.format[colnames(result.table)[sort]]
 
   # return the table
-  if (format == "kable") {
+  if (tolower(format) == "kable") {
     options(knitr.kable.NA = '')
     kable(result.table.format, caption = paste0("Cq-values: ", sample, " ", target), escape = FALSE) %>%
       # kable_styling(bootstrap_options = c("striped", "hover", "condensed"))%>%
@@ -132,7 +143,7 @@ table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), 
       row_spec(nrow(result.table.format),bold=T, hline_after = TRUE)%>%
       row_spec(0, font_size = 10)%>%
       column_spec(border, border_right = T)
-  } else if (format == "DT") {
+  } else if (tolower(format) == "dt") {
     datatable(result.table,
               caption = paste0("Cq-values: ", sample, " ", target),
               rownames = TRUE,
