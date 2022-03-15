@@ -7,7 +7,7 @@
 #' @param onlyNumeric Will only use samples that are a numerical (e.g. percentage)
 #' @return returns a ggplot with the Cq values for both genotypes.
 #' @export
-plot.Cq <- function(CqType = "Regression", onlyNumeric = FALSE){
+plot.Cq <- function(CqType = "SD", onlyNumeric = FALSE){
 
   df <- Cq.data.mean(CqType = CqType, onlyNumeric = onlyNumeric, return = TRUE)
 
@@ -42,4 +42,28 @@ plot.Cq <- function(CqType = "Regression", onlyNumeric = FALSE){
     }
 
 
+}
+
+#' plots Cq values of each genotype againgst the pseudo log concentration.
+#'
+#' This function will give you a classic efficiency plot. Therefore the Cq values are plotted.
+#' You need to have data.cq list from make.cq.data() function.
+#'
+#' ! The samplename is the concentration / mixture for the target genotype!
+#' Only valid numeric samples will be used. Sample names like 100, "100", "100%" will be converted to 100. But other sample names like "Test" will be ignored.
+#'
+#' @param CqType this is the Cq value type that should be used.
+#' @return returns a ggplot with the Cq values for both genotypes.
+#' @export
+plot.Cq.efficiency <- function(CqType = "SD"){
+
+  df <- Cq.data.mean(CqType = CqType, onlyNumeric = TRUE, return = TRUE)
+
+
+  ggplot(df) +
+    geom_point(cex=3, aes(x = sample, y = mean.Cq.target, col = "target"))+
+    geom_point(cex=3, aes(x = 100-sample, y = mean.Cq.offtarget, col = "offtarget"))+
+    xlab(label = "Mixture [%] (pseudo_log scale)")+
+    ylab(label = paste0("Cq value: ", CqType))+
+    scale_x_continuous(trans = "pseudo_log")
 }

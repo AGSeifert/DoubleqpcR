@@ -49,7 +49,7 @@ make.Cq.data <- function(add = FALSE, target = "Genotype A", CqType = c("TP","SD
 }
 
 #' This Function will summarize the data.cq samples for one Cq type!
-#' It is called by other functions!
+#' - helper function.
 #'
 #' @param CqType this is the Cq value columns from the input.cq that should be used.
 #' @param onlyNumeric Will only use samples that are a numerical (for percentages the "%" will be stripped)
@@ -92,5 +92,50 @@ Cq.data.mean <- function(CqType = "SD", onlyNumeric = FALSE, return = FALSE){
     return(df)
   } else{
     data.Cq.sum <<- df
+  }
+}
+
+#' This Function will give the data.cq samples for one Cq type in a dataframe
+#' - helper function.
+#'
+#' @param CqType this is the Cq value columns from the input.cq that should be used.
+#' @param onlyNumeric Will only use samples that are a numerical (for percentages the "%" will be stripped)
+#' @param return standard=FALSE will write in global scope! Otherwise will return the dataframe.
+#' @return standard: returns nothing. Creates a dataframe or creates a a dataframe data.cq.sum in global scope
+#' @export
+Cq.data.df <- function(CqType = "SD", onlyNumeric = FALSE, return = FALSE){
+
+  if(!exists("data.Cq")){ # Check if data.cq is available
+    stop("No data.cq list available - please run make.cq.data()")
+  }
+
+  if(length(CqType) != 1){ # Check if CqType is only one type!
+    stop("Cq Type needs to be only one!")
+  }
+
+  # new data frame for return:
+  df <- data.frame(sample = character(), Cq.target = numeric(), Cq.offtarget = numeric())
+
+  # Go over all samples (maybe in apply function better?)
+  for (sample in names(data.Cq)) {
+    if(onlyNumeric){
+      sample <- trimws(gsub("%","",sample))
+      thisSample <- try(as.numeric(sample), silent = TRUE)  # will be NA if not numerical conversion possible.
+      if(is.na(thisSample)){  # leave sample out, if it is not numeric!
+        next
+      } else {
+        sample <- thisSample
+      }
+    }
+    df <- rbind(df, data.frame(sample = sample,
+                               Cq.target = eval(parse(text = paste0("data.Cq$'", sample, "'$", CqType, "[,1]"))),
+                               Cq.offtarget = eval(parse(text = paste0("data.Cq$'", sample, "'$", CqType, "[,2]")))
+    ))
+
+  }
+  if(return){
+    return(df)
+  } else{
+    data.Cq.df <<- df
   }
 }

@@ -4,7 +4,7 @@
 \alias{plot.Cq}
 \title{plots Cq values with the both genotypes on x and y axis}
 \usage{
-plot.Cq(CqType = "Regression", onlyNumeric = FALSE)
+plot.Cq(CqType = "SD", onlyNumeric = FALSE)
 }
 \arguments{
 \item{CqType}{this is the Cq value type that should be used.}
