@@ -17,5 +17,6 @@ This function will give you a classic efficiency plot. Therefore the Cq values a
 You need to have data.cq list from make.cq.data() function.
 }
 \details{
+! The samplename is the concentration / mixture for the target genotype!
 Only valid numeric samples will be used. Sample names like 100, "100", "100\%" will be converted to 100. But other sample names like "Test" will be ignored.
 }

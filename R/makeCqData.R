@@ -139,3 +139,67 @@ Cq.data.df <- function(CqType = "SD", onlyNumeric = FALSE, return = FALSE){
     data.Cq.df <<- df
   }
 }
+
+
+#' This Function will give the delta Cq values. Always: offtarget Cq - target Cq
+#' - helper function.
+#'
+#' The delta Cq values can be calculated by randomly assign two values, build all combinations of deta Cq. Directly use the values from the same row or just use the mean values.
+#'
+#' @param CqType this is the Cq value columns from the input.cq that should be used.
+#' @param method can be either "combinatorial", "random", "direct" or "mean" (can be abbriviated). This will impact how the differences are calculated.
+#' @param onlyNumeric Will only use samples that are a numerical (for percentages the "%" will be stripped)
+#' @param return standard=FALSE will write in global scope! Otherwise will return the dataframe.
+#' @return standard: returns nothing. Creates a dataframe or creates a a dataframe data.cq.sum in global scope
+#' @export
+delta.Cq.data <- function(CqType = "SD", method = "combinatorial", onlyNumeric = FALSE, return = FALSE){
+
+  data <- Cq.data.df(CqType = CqType, onlyNumeric = onlyNumeric, return = TRUE)
+
+  # make all combinations: (neglect NA values)
+  if (startsWith(tolower(method),"c")){
+    data.list <- split(data, data$sample)
+    data <- lapply(data.list, function(x){
+      combinations <- expand.grid(x[,3], x[,2])
+      combinations$Var1 - combinations$Var2
+    })
+    df <- data.frame(sample = character(), delta.Cq = numeric())
+    for (i in 1:length(data)) {
+      d <- data.frame(sample = rep(names(data[i]), length(data[[i]])), delta.Cq = data[[i]])
+      df <- rbind(df, d)
+    }
+    df <- df[complete.cases(df$delta.Cq),]
+  # only mean values
+  } else if(startsWith(tolower(method),"m")){
+    data.list <- split(data, data$sample)
+    data <- sapply(data.list, function(x){
+      mean(x[,3], na.rm = TRUE) - mean(x[,2], na.rm = TRUE)
+    })
+    df <- data.frame(sample = names(data), delta.Cq = data)
+  # randomly assigned
+  } else if(startsWith(tolower(method),"r")){
+    data.list <- split(data, data$sample)
+    data <- lapply(data.list, function(x){
+      sample(x[,3]) - sample(x[,2])
+    })
+    df <- data.frame(sample = character(), delta.Cq = numeric())
+    for (i in 1:length(data)) {
+      d <- data.frame(sample = rep(names(data[i]), length(data[[i]])), delta.Cq = data[[i]])
+      df <- rbind(df, d)
+    }
+    df <- df[complete.cases(df$delta.Cq),]
+  # directly assigned
+  } else if(startsWith(tolower(method),"d")){
+    df <- data.frame(sample = data$sample, delta.Cq = data[,3] - data[,2])
+    df <- df[complete.cases(df$delta.Cq),]
+
+  } else {
+      stop("Sorry, no valid method for calculating delta Cq values.")
+  }
+
+  if(return){
+    return(df)
+  } else{
+    delta.Cq <<- df
+  }
+}
