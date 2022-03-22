@@ -10,12 +10,13 @@
 #' @param target the target genotype "genotype A".
 #' @param CqType this is the Cq value columns from the input.cq that should be used.
 #' @param outliers logical if outliers are to be deleted from the output
+#' @param outliers.method If a "Dixon" or "Grubbs" test should be used.
 #' @param alpha alpha for outlier testing (0.05 = 95% significance)
-#' @param outlier.range This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test should happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.
+#' @param outlier.range For Grubbs: input ignored, set to 6. For Dixon: This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test should happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.
 #' @param silent If status of outlier detection and processing is printed.
 #' @return returns a list of samples with cq values (data.cq)
 #' @export
-make.Cq.data <- function(add = FALSE, target = "Genotype A", CqType = c("TP","SD"), outliers = TRUE, alpha = 0.05, outlier.range = 3, silent = FALSE){
+make.Cq.data <- function(add = FALSE, target = "Genotype A", CqType = c("TP","SD"), outliers = TRUE, outliers.method = "Grubbs", alpha = 0.05, outlier.range = 3, silent = FALSE){
 
   # Checks if data can be added!
   if(add){
@@ -39,13 +40,61 @@ make.Cq.data <- function(add = FALSE, target = "Genotype A", CqType = c("TP","SD
       if(!silent){
         print(paste0("Cq type ", type, " processing:"))
       }
-      cqVals <- table.Cq(sample = sample, target = target, CqType = type, outliers = outliers, alpha = alpha, format = "data", outlier.range = outlier.range, silent = silent)
+      cqVals <- table.Cq(sample = sample, target = target, CqType = type, outliers = outliers, outliers.method = outliers.method, alpha = alpha, format = "data", outlier.range = outlier.range, silent = silent)
       eval(parse(text = paste0("sample.list$`", type,"` <- cqVals")))
     }
 
     eval(parse(text = paste0("data.Cq$`", sample,"` <<- sample.list")))
   }
 
+}
+
+#' This Function will combine subsamples, so that they can be used as one sample.
+#'
+#' Normaly make.Cq.data() was called with outlier removal for a subsample. Or just to combine different input tables.
+#' In order to do this different sample names were needed and now it is time to combine these individual samples back together.
+#'
+#' This function will combine subsample with the same base name before a delimiter.
+#' e.g. "100.1, 100.2, 100.a, 100.something" would be in the same sample "100" after.
+#'
+#' @param delimiter standard: "." wich seperates the base name from the subsample counter or name. "." can be problematic for decimal values. The FIRST Occourance of this delimiter will be used only. Everything after is trimmed.
+#' @param outliers logical if outliers are to be deleted from the output
+#' @param outliers.method If a "Dixon" or "Grubbs" test should be used.
+#' @param alpha alpha for outlier testing (0.05 = 95% significance)
+#' @param outlier.range For Grubbs: input ignored, set to 6. For Dixon: This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test should happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.
+#' @return nothing. changes data.Cq in global scope
+#' @export
+combineSubsamples <- function(delimiter = ".", outliers = TRUE, outliers.method = "Grubbs", alpha = 0.05, outlier.range = 3, silent = FALSE){
+  data <- list()
+  for (sample in names(data.Cq)) {
+    newsample <- trimws(sample, which = "r", whitespace = paste0("[", delimiter, "].*"))
+    list <- list()
+    list[[1]] <- eval(parse(text=paste0("data.Cq$'",sample,"'")))
+    names(list) <- newsample
+    if(newsample %in% names(data)){
+      for (listlist in names(eval(parse(text=paste0("data$'",newsample,"'"))))) {
+        eval(parse(text=paste0("data$'",newsample,"'$",listlist," <- Map(c, data$'",newsample,"'$",listlist, ", list[[1]]$",listlist,")")))
+      }
+    } else {
+      data <- append(data, list)
+    }
+  }
+  if(outliers){
+    for (sample in names(data)) {
+      for(list in names(eval(parse(text=paste0("data$'",sample,"'"))))){
+        if (startsWith(tolower(outliers.method), "d")){
+          eval(parse(text=paste0("data$'",sample,"'$",list,"[[1]] <- voges_dixon(data = data$'",sample,"'$",list,"[[1]], outlier.range = outlier.range, alpha = alpha, silent = silent)")))
+          eval(parse(text=paste0("data$'",sample,"'$",list,"[[2]] <- voges_dixon(data = data$'",sample,"'$",list,"[[2]], outlier.range = outlier.range, alpha = alpha, silent = silent)")))
+        } else if (startsWith(tolower(outliers.method), "g")){
+          eval(parse(text=paste0("data$'",sample,"'$",list,"[[1]] <- voges_grubbs(data = data$'",sample,"'$",list,"[[1]], outlier.range = 6, alpha = alpha, silent = silent)")))
+          eval(parse(text=paste0("data$'",sample,"'$",list,"[[2]] <- voges_grubbs(data = data$'",sample,"'$",list,"[[2]], outlier.range = 6, alpha = alpha, silent = silent)")))
+        } else {
+          stop("No such outlier method... enter 'Grubbs' or 'Dixon'.")
+        }
+      }
+    }
+  }
+  data.Cq <<- data
 }
 
 #' This Function will summarize the data.cq samples for one Cq type!

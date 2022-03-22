@@ -26,3 +26,36 @@ voges_dixon <- function(data, outlier.range = 3, alpha = 0.05, silent = FALSE) {
 
   return(data)
 }
+
+#' Helper function for outlier detection.
+#'
+#' Wrapper for the Grubbs test from outliers package. This test will scan for multiple outliers! removing one after another.
+#'
+#' @import outliers
+#' @param data input data (List, dataframe or vector?)
+#' @param alpha p-value for outlier removal (0.05 = 95% significance)
+#' @param outlier.range How many values have to be present for doing grubbs test (std 6)
+#' @param silent should outliers be printed to output?
+#' @return returns a dataframe or list depending on the input.
+#' @export
+voges_grubbs <- function(data, outlier.range = 6, alpha = 0.05, silent = FALSE) {
+
+  out.test <- TRUE
+
+  while (out.test == TRUE) {
+    if (length(na.omit(data)) < outlier.range){
+      out.test <- FALSE
+    } else {
+      test <- grubbs.test(data)
+      if (test$p.value < alpha) {
+        if(!silent){
+          print(paste(outlier(data), "in", paste(data, collapse = " "), "is an outlier."))
+        }
+        data[data == outlier(data)] <- NA
+      } else {
+        out.test <- FALSE
+      }
+    }
+  }
+  return(data)
+}

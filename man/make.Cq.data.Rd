@@ -10,6 +10,7 @@ make.Cq.data(
   target = "Genotype A",
   CqType = c("TP", "SD"),
   outliers = TRUE,
+  outliers.method = "Grubbs",
   alpha = 0.05,
   outlier.range = 3,
   silent = FALSE
@@ -24,9 +25,11 @@ make.Cq.data(
 
 \item{outliers}{logical if outliers are to be deleted from the output}
 
+\item{outliers.method}{If a "Dixon" or "Grubbs" test should be used.}
+
 \item{alpha}{alpha for outlier testing (0.05 = 95\% significance)}
 
-\item{outlier.range}{This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test should happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.}
+\item{outlier.range}{For Grubbs: input ignored, set to 6. For Dixon: This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test should happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.}
 
 \item{silent}{If status of outlier detection and processing is printed.}
 }

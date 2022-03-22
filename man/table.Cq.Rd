@@ -9,6 +9,7 @@ table.Cq(
   target = "Genotype A",
   CqType = c("TP", "SD"),
   outliers = TRUE,
+  outliers.method = "Grubbs",
   alpha = 0.05,
   outlier.range = 3,
   decimals = 3,
@@ -25,11 +26,13 @@ table.Cq(
 
 \item{outliers}{logical if outliers are to be deleted from the output}
 
+\item{outliers.method}{If a "Dixon" or "Grubbs" test should be used.}
+
 \item{alpha}{alpha for outlier testing (0.05 = 95\% significance)}
 
-\item{outlier.range}{This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test shoud happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.}
+\item{outlier.range}{For Grubbs: input ignored, set to 6. For Dixon: This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test shoud happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.}
 
-\item{decimals}{decimals for the resulting table}
+\item{decimals}{decimals for the resulting table (ignored for format = "data")}
 
 \item{format}{How the table will be formated. possible are "kable" and "DT" (work in progress) or "data" for pure dataframe, "fulldata" for a dataframe with difference, mean, and sd. Or any other input will give just the table.}
 

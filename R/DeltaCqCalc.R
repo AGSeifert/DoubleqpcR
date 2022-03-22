@@ -10,14 +10,15 @@
 #' @param target the target genotype "genotype A".
 #' @param CqType wich Cq values should be used. This can be a vector!
 #' @param outliers logical if outliers are to be deleted from the output
+#' @param outliers.method If a "Dixon" or "Grubbs" test should be used.
 #' @param alpha alpha for outlier testing (0.05 = 95% significance)
-#' @param outlier.range This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test shoud happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.
-#' @param decimals decimals for the resulting table
+#' @param outlier.range For Grubbs: input ignored, set to 6. For Dixon: This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test shoud happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.
+#' @param decimals decimals for the resulting table (ignored for format = "data")
 #' @param format How the table will be formated. possible are "kable" and "DT" (work in progress) or "data" for pure dataframe, "fulldata" for a dataframe with difference, mean, and sd. Or any other input will give just the table.
 #' @param silent should status be printed? (mostly for outlier detection)
 #' @return returns a table with the delta Cq values with mean and standard deviation.
 #' @export
-table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), outliers = TRUE, alpha = 0.05, outlier.range = 3, decimals = 3, format = "kable", silent = FALSE){
+table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), outliers = TRUE, outliers.method = "Grubbs", alpha = 0.05, outlier.range = 3, decimals = 3, format = "kable", silent = FALSE){
   # Control the input:
   if(is.na(sample)){
     stop("Not a valid sample.")
@@ -70,8 +71,15 @@ table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), 
 
     # Outlier detection:
     if (outliers){
+      if (startsWith(tolower(outliers.method), "d")){
       containing.A.value <- voges_dixon(data = containing.A.value, outlier.range = outlier.range, alpha = alpha, silent = silent)
       containing.B.value <- voges_dixon(data = containing.B.value, outlier.range = outlier.range, alpha = alpha, silent = silent)
+      } else if (startsWith(tolower(outliers.method), "g")){
+        containing.A.value <- voges_grubbs(data = containing.A.value, outlier.range = 6, alpha = alpha, silent = silent)
+        containing.B.value <- voges_grubbs(data = containing.B.value, outlier.range = 6, alpha = alpha, silent = silent)
+      } else {
+        stop("No such outlier method... enter 'Grubbs' or 'Dixon'.")
+      }
     }
 
     result.table[,paste0(type.n, ".", target)] <- containing.A.value
