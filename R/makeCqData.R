@@ -69,11 +69,13 @@ combineSubsamples <- function(delimiter = ".", outliers = TRUE, outliers.method 
   for (sample in names(data.Cq)) {
     newsample <- trimws(sample, which = "r", whitespace = paste0("[", delimiter, "].*"))
     list <- list()
-    list[[1]] <- eval(parse(text=paste0("data.Cq$'",sample,"'")))
+    list[[1]] <- eval(parse(text=paste0("data.Cq$'",sample,"'"))) # list of dataframes for all Cq Types.
     names(list) <- newsample
     if(newsample %in% names(data)){
-      for (listlist in names(eval(parse(text=paste0("data$'",newsample,"'"))))) {
-        eval(parse(text=paste0("data$'",newsample,"'$",listlist," <- Map(c, data$'",newsample,"'$",listlist, ", list[[1]]$",listlist,")")))
+      for (df in names(eval(parse(text=paste0("data$'",newsample,"'"))))) {
+        # This would be for lists:
+        # eval(parse(text=paste0("data$'",newsample,"'$",df," <- Map(c, data$'",newsample,"'$",df, ", list[[1]]$",df,")")))
+        eval(parse(text = paste0("data$'",newsample,"'$",df," <- rbind(data$'",newsample,"'$",df,", list[[1]]$",df,")")))
       }
     } else {
       data <- append(data, list)
@@ -239,12 +241,27 @@ delta.Cq.data <- function(CqType = "SD", method = "combinatorial", onlyNumeric =
     df <- df[complete.cases(df$delta.Cq),]
   # directly assigned
   } else if(startsWith(tolower(method),"d")){
-    df <- data.frame(sample = data$sample, delta.Cq = data[,3] - data[,2])
+    #df <- data.frame(sample = data$sample, delta.Cq = data[,3] - data[,2])
+    #df <- df[complete.cases(df$delta.Cq),]
+    data.list <- split(data, data$sample)
+    data <- lapply(data.list, function(x){
+      x[,3] - x[,2]
+    })
+    df <- data.frame(sample = character(), delta.Cq = numeric())
+    for (i in 1:length(data)) {
+      d <- data.frame(sample = rep(names(data[i]), length(data[[i]])), delta.Cq = data[[i]])
+      df <- rbind(df, d)
+    }
     df <- df[complete.cases(df$delta.Cq),]
-
   } else {
       stop("Sorry, no valid method for calculating delta Cq values.")
   }
+
+  if(onlyNumeric){
+    #delta.Cq <- delta.Cq[order(delta.Cq$sample),]
+    #levels(df$sample) <- sort(as.numeric(levels(df$sample)))
+  }
+
 
   if(return){
     return(df)
