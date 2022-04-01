@@ -258,8 +258,10 @@ delta.Cq.data <- function(CqType = "SD", method = "combinatorial", onlyNumeric =
   }
 
   if(onlyNumeric){
+    # This was a test for remove the sample factors?
     #delta.Cq <- delta.Cq[order(delta.Cq$sample),]
     #levels(df$sample) <- sort(as.numeric(levels(df$sample)))
+    df$sample <- as.numeric(as.character(df$sample))
   }
 
 

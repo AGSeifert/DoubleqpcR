@@ -4,7 +4,10 @@
 \alias{plot.delta.Cq.box}
 \title{plots delta Cq values as box-plots}
 \usage{
-plot.delta.Cq.box()
+plot.delta.Cq.box(points = TRUE)
+}
+\arguments{
+\item{points}{Show individual datapoints? std TRUE}
 }
 \value{
 returns a ggplot object.
