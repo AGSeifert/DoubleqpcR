@@ -1,4 +1,7 @@
 # DoubleqpcR
+
+<img align="right" width="200" src="https://user-images.githubusercontent.com/73955527/166162800-318a29a1-7e39-42d6-bad1-ef0dc28c3332.png">
+
 R Package accomodating research for DMAS qPCR study
 
 ## About
