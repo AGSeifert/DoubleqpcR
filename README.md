@@ -15,6 +15,8 @@ The package provides some basic workflow but does not claim to be universal. You
 ## Installation
 Install with devtools, tough I will recommend to clone the repository and work with the raw code if you eg. want to adjust settings.
 
+`devtools::install_github("LucasFVoges/DoubleqpcR", build_vignettes = TRUE)`
+
 ## Documentation
 
 
