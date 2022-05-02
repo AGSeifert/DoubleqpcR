@@ -12,7 +12,8 @@ regression.delta.Cq(
   cv = FALSE,
   cv.seed = sample(1:100, 1),
   cv.method = "LGOCV",
-  cv.p = 50
+  cv.p = 50,
+  plot = TRUE
 )
 }
 \arguments{
@@ -29,11 +30,13 @@ regression.delta.Cq(
 \item{cv.method}{The method for cv from caret package}
 
 \item{cv.p}{percentage of training data}
+
+\item{plot}{plot the data with plotfit() method from investR - std setting (for more optiones use plotfit() seperatly)}
 }
 \value{
 returns a model: model.delta.Cq object in global space.
 }
 \description{
 The model and prediction with investR package are reported. A CrossValidation for the model is possible with caret.
-The cross validation here is a basic wrapper for caret package. If more detailed CV is wanted, the analysis should be made seperatly with caret.
+The cross validation here is a basic wrapper for caret package. If more detailed CV is wanted, the analysis should be made separately with caret.
 }
