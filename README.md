@@ -100,13 +100,26 @@ TODO: check further requirements
 
 ## References
 Packages used:  
-(TODO linking)
 
-- investR
-- qpcr
+- investR - [GitHub](https://github.com/bgreenwell/investr)
+
+> Greenwell, B. M.; Schubert Kabban, C. M., investr: an R package for inverse estimation. R Journal **2014**, 6 (1), 90-100.
+
+- qpcr - [Spiess.de](http://www.dr-spiess.de/qpcR.html)
+
+> Ritz, C.; Spiess, A.-N., qpcR: an R package for sigmoidal model selection in quantitative real-time polymerase chain reaction analysis. Bioinformatics **2008**, 24 (13), 1549-1551.
+
 - caret
-- outliers
+
+> Kuhn, M., Building Predictive Models in R Using the caret Package. Journal of Statistical Software **2008**, 28 (5), 1-26.
+
+- outliers - [Komsta.net](http://www.komsta.net/software)
+
+> Komsta, L., Processing data for outliers. The Newsletter of the R Project Volume 6/2, May 2006 2006, 6, 10.
+
 - ggplot2
+
+> Wickham, H., Ggplot2: Elegant graphics for data analysis. Springer-Verlag New York: 2016.
 
 ## Cite
 (TODO)
