@@ -4,6 +4,9 @@
 
 R Package accomodating research for DMAS qPCR study
 
+** WORK IN PROGRESS **  
+This package is still in preview status. Not all functionality is included jet. The first Version will be released when the corresponding publication is available in literature.
+
 ## About
 This package is designed for DMAS qPCR data. The functions provided are useful for analysis and can handle .csv input in a specific format (see below). RDML format is not supported. This package provides the methods and functions used in the almond DMAS qPCR study (LINK).
 
@@ -15,7 +18,7 @@ Install with devtools, tough I will recommend to clone the repository and work w
 ## Documentation
 
 
-![overview drawio](https://user-images.githubusercontent.com/73955527/158216595-33eb708e-d592-4e61-9b04-5c290416aa41.png)
+![overview drawio](https://user-images.githubusercontent.com/73955527/166209691-64f66d3e-6229-46c6-87d5-81603048b228.png)
 
 
 ### Input Data
@@ -73,13 +76,25 @@ TODO: check further requirements
 #### Make Data Object for further analasys
 
 - `make.Cq.data()` will generate the main list of dataframes (outliers can be removed)
+- `combineSubsamples()` will combine e.g. 100.a, 100.b to one sample 100
 - `Cq.data.mean()` will generate a summery of the data (mean and sd)
+- `Cq.data.df()` dataframe report
+- `delta.Cq.data` returns a dataframe of Delta Cq values.
 
 > The connection to fluorescence data will be cut at this point.
 
 #### Cq plots
 
 - `plot.Cq()`
+- `plot.Cq.efficiency()`
+
+#### Delta Cq plots
+
+- `plot.delta.Cq.box()` Boxplots
+- `plot.delta.Cq.overview` Data overview
+
+#### Regression Analsysis
+- `regression.delta.Cq()` will perform model generation, plot and cross validation
 
 ## References
 Packages used:  
