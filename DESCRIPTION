@@ -1,0 +1,26 @@
+Package: DoubleqpcR
+Title: DMAS qPCR analysis functions
+Version: 0.0.0.1
+Authors@R:
+    person("Lucas", "Voges", , "lucas.voges@chemie.uni-hamburg.de", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-8433-8321"))
+Description: DMAS qPCR analysis functions
+License: use_mit_license()
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Depends:
+    qpcR
+Imports:
+	caret,
+    investr,
+    outliers,
+    ggplot2,
+    reshape2,
+    knitr,
+    drc,
+    kableExtra,
+    DT
+Suggests:
+    tidyquant
+    
