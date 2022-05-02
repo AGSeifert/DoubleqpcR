@@ -6,6 +6,7 @@
 \usage{
 regression.delta.Cq(
   CqType = "SD",
+  linSqrtTrans = FALSE,
   method = "c",
   fit = "linear",
   rawPolynomials = FALSE,
@@ -13,11 +14,15 @@ regression.delta.Cq(
   cv.seed = sample(1:100, 1),
   cv.method = "LGOCV",
   cv.p = 0.5,
-  plot = TRUE
+  cvComplete = FALSE,
+  plot = TRUE,
+  cv.plot = FALSE
 )
 }
 \arguments{
 \item{CqType}{this is the Cq value type that should be used.}
+
+\item{linSqrtTrans}{Will transform the values to linearise the values! this is basically a shifted square root representation. The parameter fit should be linar as well.}
 
 \item{method}{method for generating the delta Cq values (see delta.Cq.data())}
 
@@ -31,7 +36,11 @@ regression.delta.Cq(
 
 \item{cv.p}{percentage of training data (0 to 1)}
 
-\item{plot}{plot the data with plotfit() method from investR - std setting (for more options use plotfit() separately)}
+\item{cvComplete}{should a cross validation be made with omitting one concentration completely? This will run separately from caret cv.}
+
+\item{plot}{plot the data with plotfit() method from investR with std. settings (for more options use plotfit() separately)}
+
+\item{cv.plot}{plot the data with plotfit() for the cvComplete cross validation.}
 }
 \value{
 returns a model: model.delta.Cq object in global space.

@@ -153,7 +153,7 @@ plot <- plot.delta.Cq.box(points = TRUE)
 plot + theme_bw()
 ```
 
-## Regression analysis
+## Regression analysis (polynomial)
 
 **At this point all samples need to be numeric and represent a percentage!**
 
@@ -167,10 +167,10 @@ plot.delta.Cq.overview(CqType = c("Regression", "Autocalculated"))
 
 ### Model generation
 
-A model (linear, poly3, ...) can be used to describe the values from DMAS-qPCR. The R package investR is used for prediction and plotting. And the package caret for cross validation.
+A model (linear, poly3, ...) can be used to describe the values from DMAS-qPCR. The R package investR is used for prediction and plotting. And the package caret for cross validation. 
 
 ```{r Cq diff regression, echo=TRUE, message=FALSE, warning=FALSE}
-regression.delta.Cq(CqType = "Regression", fit = "poly3", cv = TRUE)
+regression.delta.Cq(CqType = "Regression", fit = "poly3", cv = TRUE, cvComplete = TRUE)
 ```
 
 ### Model analysis
@@ -206,11 +206,72 @@ abline(h = predictionValue, v = c(res$lower, res$estimate, res$upper), lty = 2, 
 
 > For the prediction y = `r predictionValue` the model predicts a response of `r res$estimate` with upper `r res$upper` and lower `r res$lower` interval.
 
+
+## Regression analysis (shifted square root transformation)
+
+**At this point all samples need to be numeric and represent a percentage!**
+
+All samples should be between 0 % and 100 %. Samples that are not numeric and between 0 to 100 will be skipped. 
+
+An overview can be plotted for different Cq types from data.Cq.
+
+```{r lin Cq diff plot 1, echo=TRUE, message=FALSE, warning=FALSE, fig.width=10, fig.height=3}
+plot.delta.Cq.overview(CqType = c("Regression", "Autocalculated"))
+```
+
+### Model generation
+
+The shifted square root transformation to linearise the data can be used with the parameter `linSqrtTrans = TRUE`
+
+```{r Cq diff regression sqrtLin, echo=TRUE, message=FALSE, warning=FALSE}
+regression.delta.Cq(CqType = "Regression", linSqrtTrans = TRUE, fit = "linear", cv = TRUE, cvComplete = TRUE)
+```
+
+### Model analysis
+
+The model can be analysed by standard methods:
+
+```{r lin regression model analysis, echo=TRUE, message=FALSE, warning=FALSE}
+# Model Summary:
+summary(model.delta.Cq)
+
+# Plot the residuals:
+plot(summary(model.delta.Cq)$residuals, main = "Residuals for fit", ylab = "residuals")
+```
+
+### Model prediction
+
+Values can be predicted with investr package. The mean.response should be set to TRUE. But one could argue that the intrinsic bias from the combinatoric data for model creation is not fit for a mean response and a individual response should be considered (mean.response = FALSE). This leads to enormous uncertainty around delta CQ of 0.
+
+```{r lin regression model prediction, echo=TRUE, message=FALSE, warning=FALSE}
+predictionValue <- 0
+
+res <- invest(model.delta.Cq, y0 = predictionValue, interval = "inversion", level = 0.95, mean.response = FALSE)
+
+plotFit(model.delta.Cq, interval = "both",
+         level = 0.95, shade = TRUE,
+         col.pred = "whitesmoke",
+         col.conf = "skyblue",
+         extend.range = TRUE,
+         xlab = "proportion of target genotype",
+         ylab = bquote(Delta*Cq))
+abline(h = predictionValue, v = c(res$lower, res$estimate, res$upper), lty = 2, lwd = 0.5, col = "salmon")
+```
+
+> For the prediction y = `r predictionValue` the model predicts a response of `r res$estimate` with upper `r res$upper` and lower `r res$lower` interval.
+
+
+## TODO
+
 ### Plot delta Cq values with prediction
 
 Again the typical box plot representation of delta Cq values but now with predictions from a regression model.
 
+**TODO**
+
 #### A Box Plot with prediction
+
+**TODO**
 
 
 
