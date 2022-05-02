@@ -1,4 +1,4 @@
-#' This function wil perform a regression analysis on the delta Cq values.
+#' This function will build a regression model on the delta Cq values. Plot and cross validation is included.
 #'
 #' The model and prediction with investR package are reported. A CrossValidation for the model is possible with caret.
 #' The cross validation here is a basic wrapper for caret package. If more detailed CV is wanted, the analysis should be made separately with caret.
@@ -11,17 +11,17 @@
 #' @param cv should a cross validation be made? With caret!
 #' @param cv.seed seed for cv
 #' @param cv.method The method for cv from caret package
-#' @param cv.p percentage of training data
-#' @param plot plot the data with plotfit() method from investR - std setting (for more optiones use plotfit() seperatly)
+#' @param cv.p percentage of training data (0 to 1)
+#' @param plot plot the data with plotfit() method from investR - std setting (for more options use plotfit() separately)
 #' @return returns a model: model.delta.Cq object in global space.
 #' @export
-regression.delta.Cq <- function(CqType = "SD", method = "c", fit = "linear", rawPolynomials = FALSE, cv = FALSE, cv.seed = sample(1:100, 1), cv.method = "LGOCV", cv.p = 50, plot = TRUE){
+regression.delta.Cq <- function(CqType = "SD", method = "c", fit = "linear", rawPolynomials = FALSE, cv = FALSE, cv.seed = sample(1:100, 1), cv.method = "LGOCV", cv.p = 0.5, plot = TRUE){
 
   if(!exists("data.Cq")){ # Check if delta.Cq is available
     stop("No data.cq list available - please run make.Cq.data()")
   }
 
-  this.delta.Cq <- delta.Cq.data(CqType = CqType, method = method, onlyNumeric = TRUE, return = TRUE)
+  modelData.delta.Cq <<- delta.Cq.data(CqType = CqType, method = method, onlyNumeric = TRUE, return = TRUE)
 
   method <- tolower(gsub(" ","", fit)) #just remove white spaces and lower case
   if (startsWith(method, "l")) {
@@ -37,14 +37,16 @@ regression.delta.Cq <- function(CqType = "SD", method = "c", fit = "linear", raw
     stop(paste("No method found for", fit))
   }
 
-  model.delta.Cq <<- lm(data = this.delta.Cq, func)
+  model.delta.Cq <<- lm(data = modelData.delta.Cq, func)
 
   if (cv) {
     # for CV
     set.seed(cv.seed)
     # p should not be set if not group cv?
     ctrl <- caret::trainControl(method = cv.method, p = cv.p)
-    train.model <- caret::train(func, data = this.delta.Cq, method = "lm", trControl = ctrl)
+    train.model <- caret::train(func, data = modelData.delta.Cq, method = "lm", trControl = ctrl)
+    print("CROSS VALIDATION:")
+    print(train.model)
   }
 
   if (plot) {

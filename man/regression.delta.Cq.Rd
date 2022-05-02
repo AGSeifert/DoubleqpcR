@@ -2,7 +2,7 @@
 % Please edit documentation in R/Regression.R
 \name{regression.delta.Cq}
 \alias{regression.delta.Cq}
-\title{This function wil perform a regression analysis on the delta Cq values.}
+\title{This function will build a regression model on the delta Cq values. Plot and cross validation is included.}
 \usage{
 regression.delta.Cq(
   CqType = "SD",
@@ -12,7 +12,7 @@ regression.delta.Cq(
   cv = FALSE,
   cv.seed = sample(1:100, 1),
   cv.method = "LGOCV",
-  cv.p = 50,
+  cv.p = 0.5,
   plot = TRUE
 )
 }
@@ -29,9 +29,9 @@ regression.delta.Cq(
 
 \item{cv.method}{The method for cv from caret package}
 
-\item{cv.p}{percentage of training data}
+\item{cv.p}{percentage of training data (0 to 1)}
 
-\item{plot}{plot the data with plotfit() method from investR - std setting (for more optiones use plotfit() seperatly)}
+\item{plot}{plot the data with plotfit() method from investR - std setting (for more options use plotfit() separately)}
 }
 \value{
 returns a model: model.delta.Cq object in global space.
