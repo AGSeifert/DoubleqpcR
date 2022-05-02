@@ -16,9 +16,6 @@ library(ggplot2)
 library(investr)
 calculateEverything = FALSE
 # Set this to true if all things should be calculated (time consuming)
-
-system.file("extdata", "rps4_8fach_cq.csv", package = "DoubleqpcR")
-system.file("extdata", "rps4_8fach.csv", package = "DoubleqpcR")
 ```
 
 # Library DoubleqpcR {.tabset .tabset-fade .tabset-pills}
