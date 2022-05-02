@@ -22,5 +22,6 @@ Imports:
     kableExtra,
     DT
 Suggests:
+    rmarkdown,
     tidyquant
-    
+VignetteBuilder: knitr
