@@ -4,7 +4,7 @@
 
 R Package accomodating research for DMAS qPCR study
 
-** WORK IN PROGRESS **  
+**WORK IN PROGRESS**  
 This package is still in preview status. Not all functionality is included jet. The first Version will be released when the corresponding publication is available in literature.
 
 ## About
