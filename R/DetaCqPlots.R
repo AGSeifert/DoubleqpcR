@@ -32,11 +32,12 @@ plot.delta.Cq.box <- function(points = TRUE){
 #' Only numeric values will be used (100 = 100 % = "100")
 #'
 #' @param CqType list of Cq types that should be plotted.
+#' @param linSqrtTrans Will transform the values to linearise the values! this is basically a shifted square root representation.
 #' @param method to generate the delta Cq values. See delta.Cq.data()
 #' @param xlab x axis title for the plots.
 #' @return returns a R base plot.
 #' @export
-plot.delta.Cq.overview <- function(CqType = c("SD","TP"), method = "c", xlab = "mixture [%]"){
+plot.delta.Cq.overview <- function(CqType = c("SD","TP"), linSqrtTrans = FALSE, method = "c", xlab = "mixture [%]"){
 
   if(!exists("data.Cq")){ # Check if delta.Cq is available
     stop("No data.cq list available - please run make.Cq.data()")
@@ -53,6 +54,12 @@ plot.delta.Cq.overview <- function(CqType = c("SD","TP"), method = "c", xlab = "
     thisData <- delta.Cq.data(CqType = type, return = TRUE, onlyNumeric = TRUE, method = method)
     #To be sure that it is really numeric:
     #thisData$sample <- as.numeric(thisData$sample)
+
+    ## Shifted square root transformation:
+    if (linSqrtTrans) {
+      thisData <- linSqrtTransform(thisData)
+    }
+
     thisData <- cbind(thisData, CqType = type)
     data <- rbind(data, thisData)
   }

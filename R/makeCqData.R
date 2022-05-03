@@ -271,3 +271,37 @@ delta.Cq.data <- function(CqType = "SD", method = "combinatorial", onlyNumeric =
     delta.Cq <<- df
   }
 }
+
+#' This Function will linearise the Delta Cq data with a shifted square root transformation.
+#' - helper function.
+#'
+#' @param data A data frame wich has sample and delta.Cq column (delta.Cq) But transformation will only affect sample column!
+#' @return returnes a dataframe
+#' @export
+linSqrtTransform <- function(data){
+  # Make the opposite concentration (offtarget)
+  data$oppConcentration <- 100 - data$sample
+  # set target concentration -50 and root:
+  data$sqrtconc[data$sample < 50] <- sqrt(data$sample[data$sample < 50])-sqrt(50)
+  data$sqrtconc[data$sample > 50] <- sqrt(data$oppConcentration[data$sample > 50])
+  data$sqrtconc[data$sample > 50] <- sqrt(50)-data$sqrtconc[data$sample > 50]
+  return(data.frame(sample = data$sqrtconc, delta.Cq = data$delta.Cq))
+}
+
+#' This Function will retransform a value / list etc to normal percentage / proportion
+#'
+#' The value(s) needs to be between -sqrt(50) and sqrt(50) or the returned value will not be correct.
+#'
+#' - helper function.
+#'
+#' @param value A signle value that should be retransformed.
+#' @return returnes a dataframe
+#' @export
+reTransform <- function(value){
+  for (i in value) {
+    if (i > sqrt(50) | i < -sqrt(50)){
+      warning(paste("Value:", i ,"not in acceptable range!"))
+    }
+  }
+  return(abs(((1+sign(value))/2) * 100 - (value - sign(value) * sqrt(50)) ^ 2))
+}

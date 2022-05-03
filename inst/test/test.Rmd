@@ -207,7 +207,7 @@ abline(h = predictionValue, v = c(res$lower, res$estimate, res$upper), lty = 2, 
 > For the prediction y = `r predictionValue` the model predicts a response of `r res$estimate` with upper `r res$upper` and lower `r res$lower` interval.
 
 
-## Regression analysis (shifted square root transformation)
+## Regression analysis (Linearisation)
 
 **At this point all samples need to be numeric and represent a percentage!**
 
@@ -216,7 +216,7 @@ All samples should be between 0 % and 100 %. Samples that are not numeric and be
 An overview can be plotted for different Cq types from data.Cq.
 
 ```{r lin Cq diff plot 1, echo=TRUE, message=FALSE, warning=FALSE, fig.width=10, fig.height=3}
-plot.delta.Cq.overview(CqType = c("Regression", "Autocalculated"))
+plot.delta.Cq.overview(CqType = c("Regression", "Autocalculated"), linSqrtTrans = TRUE, xlab = "shifted square root transformation of proportion")
 ```
 
 ### Model generation
@@ -234,9 +234,6 @@ The model can be analysed by standard methods:
 ```{r lin regression model analysis, echo=TRUE, message=FALSE, warning=FALSE}
 # Model Summary:
 summary(model.delta.Cq)
-
-# Plot the residuals:
-plot(summary(model.delta.Cq)$residuals, main = "Residuals for fit", ylab = "residuals")
 ```
 
 ### Model prediction
@@ -258,7 +255,7 @@ plotFit(model.delta.Cq, interval = "both",
 abline(h = predictionValue, v = c(res$lower, res$estimate, res$upper), lty = 2, lwd = 0.5, col = "salmon")
 ```
 
-> For the prediction y = `r predictionValue` the model predicts a response of `r res$estimate` with upper `r res$upper` and lower `r res$lower` interval.
+> For the prediction y = `r predictionValue` the model predicts a response of `r reTransform(res$estimate)` with upper `r reTransform(res$upper)` and lower `r reTransform(res$lower)` interval.
 
 
 ## TODO

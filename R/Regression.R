@@ -28,15 +28,7 @@ regression.delta.Cq <- function(CqType = "SD", linSqrtTrans = FALSE, method = "c
 
   # SHIFTED SQUARE ROOT TRANSFORMATION
   if (linSqrtTrans) {
-    #copy data
-    datapoints.sqrt <- modelData.delta.Cq
-    # Make the opposite concentration (offtarget)
-    datapoints.sqrt$oppConcentration <- 100 - datapoints.sqrt$sample
-    # set target concentration -50 and root:
-    datapoints.sqrt$sqrtconc[datapoints.sqrt$sample < 50] <- sqrt(datapoints.sqrt$sample[datapoints.sqrt$sample < 50])-sqrt(50)
-    datapoints.sqrt$sqrtconc[datapoints.sqrt$sample > 50] <- sqrt(datapoints.sqrt$oppConcentration[datapoints.sqrt$sample > 50])
-    datapoints.sqrt$sqrtconc[datapoints.sqrt$sample > 50] <- sqrt(50)-datapoints.sqrt$sqrtconc[datapoints.sqrt$sample > 50]
-    modelData.delta.Cq <<- data.frame(sample = datapoints.sqrt$sqrtconc, delta.Cq = datapoints.sqrt$delta.Cq)
+    modelData.delta.Cq <<- linSqrtTransform(modelData.delta.Cq)
   }
 
   method <- tolower(gsub(" ","", fit)) #just remove white spaces and lower case
@@ -105,9 +97,9 @@ regression.delta.Cq <- function(CqType = "SD", linSqrtTrans = FALSE, method = "c
     }
     # if squarte root trans: make the sqrt to normal percentage:
     if (linSqrtTrans){
-      test.df$conc <- abs(((1+sign(test.df$conc))/2) * 100 - (test.df$conc - sign(test.df$conc) * sqrt(50)) ^ 2)
-      test.df$estimate.percentage <- abs(((1+sign(test.df$estimate.percentage))/2) * 100 - (test.df$estimate.percentage - sign(test.df$estimate.percentage) * sqrt(50)) ^ 2)
-    }
+      test.df$conc <- reTransform(test.df$conc)
+      test.df$estimate.percentage <- reTransform(test.df$estimate.percentage)
+   }
 
     # report the results
     test.df$error <- abs(test.df$estimate.percentage - test.df$conc)

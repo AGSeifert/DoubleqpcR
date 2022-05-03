@@ -6,12 +6,15 @@
 \usage{
 plot.delta.Cq.overview(
   CqType = c("SD", "TP"),
+  linSqrtTrans = FALSE,
   method = "c",
   xlab = "mixture [\%]"
 )
 }
 \arguments{
 \item{CqType}{list of Cq types that should be plotted.}
+
+\item{linSqrtTrans}{Will transform the values to linearise the values! this is basically a shifted square root representation.}
 
 \item{method}{to generate the delta Cq values. See delta.Cq.data()}
 
