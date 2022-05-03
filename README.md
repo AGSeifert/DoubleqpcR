@@ -97,7 +97,7 @@ TODO: check further requirements
 - `combineSubsamples()` will combine e.g. 100.a, 100.b to one sample 100
 - `Cq.data.mean()` will generate a summery of the data (mean and sd)
 - `Cq.data.df()` dataframe report
-- `delta.Cq.data` returns a dataframe of Delta Cq values.
+- `delta.Cq.data()` returns a dataframe of Delta Cq values.
 
 > The connection to fluorescence data will be cut at this point.
 
@@ -109,13 +109,15 @@ TODO: check further requirements
 #### Delta Cq plots
 
 - `plot.delta.Cq.box()` Boxplots
-- `plot.delta.Cq.overview` Data overview
+- `plot.delta.Cq.overview()` Data overview
 
 #### Regression Analsysis
 - `regression.delta.Cq()` will perform model generation, plot and cross validation
+- the shifted square root transformation can be used for the regression analysis.
+- `reTransform()` will transform the values back to percentages / proportions.
 
 ## References
-Packages used:  
+Packages used in this project:  
 
 - investR - [GitHub](https://github.com/bgreenwell/investr)
 
