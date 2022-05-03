@@ -1,0 +1,278 @@
+---
+title: "introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Library DoubleqpcR
+
+```{r setup}
+library(DoubleqpcR)
+
+library(gridExtra)
+library(tidyquant)
+library(ggplot2)
+library(investr)
+calculateEverything = FALSE
+# Set this to true if all things should be calculated (time consuming)
+
+InputCq <- system.file("extdata", "rps4_8fach_cq.csv", package = "DoubleqpcR")
+InputWells <- system.file("extdata", "rps4_8fach.csv", package = "DoubleqpcR")
+```
+
+## Data Handling 
+
+To import the data the following can be used. The `input.cq`, `input.raw`, `input.raw.melt`, `input.raw.melt.usedOnly` are necessary and will be used globally! But they can be created without these functions, of course.
+
+> The example data used here is a dilution series and therefore the samples are numeric concentrations of the target genotype. Some methods for the regression will expect, that the sample column are indeed numbers! Sample 100 means a 100% target genome concentration (This can be confusing, because it is not the actual concentration). 
+
+```{r data handling, echo=TRUE, message=FALSE, warning=TRUE}
+read.cqTable(csv = InputCq) # mistake in name on purpose to demonstrate
+read.fluorescenceTable(csv = InputWells)
+```
+
+### Cq value determination 
+
+To add more Cq values from fluorescence curves any method can be used. DoubleqpcR has two implemented methods and a wrapper for the qpcR package. Both use the first and second derivative maxima to determine the Cq value. (FD = First Derivative = TP = Tourning Point) and (SD = Second Derivative = exponential slope)
+
+```{r CalcCq, echo=TRUE, message=FALSE, warning=FALSE}
+if(calculateEverything){
+# Calculate new Cq values (needs fluorescence table!)
+calc.Cq(method = "TP", cq.new = "TP")
+calc.Cq(method = "SD", cq.new = "SD")
+
+calc.Cq.qpcR(method = "TP", cq.new = "TP.qpcR")
+calc.Cq.qpcR(method = "SD", cq.new = "SD.qpcR")
+}
+```
+
+### Get the Cq values
+
+This step is optional and more for internal function use. But if the Cq values (with outlier removal) for a sample are needed in a data format, one can use the following.
+```{r get cq values, echo=TRUE, message=FALSE, warning=FALSE}
+myCqValues <- table.Cq(sample = 8.8, target = "bitter", CqType = c("Regression"), outliers = TRUE, alpha = 0.05, format = "data")
+```
+
+### Plot the fluorescence curves {.tabset .tabset-fade}
+
+To change the visuals you can overwrite the ggplot theme settings and details. This is commented in the plot for all curves.
+
+```{r all fluorescence Curve, echo=TRUE, message=FALSE, warning=FALSE}
+p <- plot.curve(sample = "all")
+p
+# p + theme_tq() + scale_color_tq() + theme(legend.position = "none")
+```
+
+An Example: 
+
+We choose Dixon outlier test here, as we have only 4 measurements per individual subsample (or no outlier removal). One can later choose outlier detection again when combining the subsamples.
+
+```{r sample 100 fluorescence Curve, echo=TRUE, message=FALSE, warning=FALSE}
+# Here is the command in simpler form:
+plot.curve(sample = "81.4.a", target = "bitter")  # sample can be also "81.4". then no percentage is shown.
+table.Cq(sample = "81.4.a", target = "bitter", CqType = c("Regression", "Autocalculated"), outliers = TRUE, outliers.method = "Dixon", alpha = 0.05, format = "kable")
+```
+
+```{r samples fluorescence Curve, echo=TRUE, message=FALSE, warning=FALSE, results='asis'}
+# plot all samples with Headings, ideal for tabsets.
+if(calculateEverything){
+for (sampleX in unique(input.cq$sample)) {
+   cat('\n\n#### Sample `', sampleX, '`\n\n')
+   plot(plot.curve(sample = sampleX, target = "bitter"))
+   cat('\n\n')
+   show(table.Cq(sample = sampleX, target = "bitter", CqType = c("Regression","Autocalculated","TP.qpcR","SD.qpcR","SD","TP"), outliers = TRUE, alpha = 0.05, format = "kable"))
+}
+}
+```
+
+### Combine data for further analysis
+
+At this point a new list of dataframes (data.cq) will be created via make.data.cq() which looses the connection to the fluorescence table. The steps above can be repeated and added to data.cq via the option add = TRUE. This procedure allows to combine multiple experiments. Cq value types that are wanted to use needs to be selected.
+
+> If all values are already present in the input.cq like it is the case in this example we only need to make the data.cq list.
+
+```{r make cq Data List, echo=TRUE, message=FALSE, warning=FALSE}
+make.Cq.data(add = FALSE, target = "bitter", CqType = c("Regression", "Autocalculated"), outliers = TRUE, outliers.method = "Dixon", alpha = 0.05, silent = TRUE)
+```
+
+In this example we have seperated two experiments with an indicator "a" and "b". It is now time to combine the two individual subsamples to one.
+```{r combine cq Data subsamples, echo=TRUE, message=FALSE, warning=FALSE}
+combineSubsamples(delimiter = ".", outliers = TRUE, outliers.method = "Grubbs")
+```
+
+### Summary of Cq values
+
+A summary of the cq values can be given via a data.cq.sum data frame. Samples which are names numeric can be filtered.
+
+```{r sumary of cq Data, echo=TRUE, message=FALSE, warning=FALSE}
+Cq.data.mean(CqType = "Regression", onlyNumeric = TRUE)
+data.Cq.sum
+```
+
+
+## Plot Cq values
+
+Here all samples that are in the data.cq list will be plotted for one Cq type.
+
+```{r cq plot, echo=TRUE, message=FALSE, warning=FALSE}
+plot.Cq(CqType = "Regression", onlyNumeric = TRUE)
+```
+
+
+Here all samples that are in the data.cq list will be plotted for one Cq type against the log of the concentration.
+Therefore the sample name has to be a numeric value which corresponds to the target concentration.
+
+```{r cq efficiency plot, echo=TRUE, message=FALSE, warning=FALSE}
+plot <- plot.Cq.efficiency(CqType = "Regression")
+
+plot + theme_tq() + scale_fill_tq() + scale_colour_tq()
+```
+
+## Delta Cq Values
+
+To get the delta Cq values the function delta.Cq.data() can be used. It has different methods to calculate the differences...
+
+Here we use all combinations of Cq values from one sample.
+
+```{r calc delta Cq values, echo=TRUE, message=FALSE, warning=FALSE}
+delta.Cq.data(CqType = "Regression", method = "c", onlyNumeric = TRUE)
+head(delta.Cq)
+```
+
+### Plot delta Cq values
+
+A typical box plot representation of delta Cq values.
+This is of cause only for demonstration purposes as these plots can be made in various ways from the data with standard visualisation methods. (Obviously this makes no sense with "delta.Cq.data(method="mean")".
+
+```{r delta Cq Box Plot, echo=TRUE, message=FALSE, warning=FALSE}
+plot <- plot.delta.Cq.box(points = TRUE) 
+plot + theme_bw()
+```
+
+## Regression analysis (polynomial)
+
+**At this point all samples need to be numeric and represent a percentage!**
+
+All samples should be between 0 % and 100 %. Samples that are not numeric and between 0 to 100 will be skipped. 
+
+An overview can be plotted for different Cq types from data.Cq.
+
+```{r Cq diff plot 1, echo=TRUE, message=FALSE, warning=FALSE, fig.width=10, fig.height=3}
+plot.delta.Cq.overview(CqType = c("Regression", "Autocalculated"))
+```
+
+### Model generation
+
+A model (linear, poly3, ...) can be used to describe the values from DMAS-qPCR. The R package investR is used for prediction and plotting. And the package caret for cross validation. 
+
+```{r Cq diff regression, echo=TRUE, message=FALSE, warning=FALSE}
+regression.delta.Cq(CqType = "Regression", fit = "poly3", cv = TRUE, cvComplete = TRUE)
+```
+
+### Model analysis
+
+The model can be analysed by standard methods:
+
+```{r regression model analysis, echo=TRUE, message=FALSE, warning=FALSE}
+# Model Summary:
+summary(model.delta.Cq)
+
+# Plot the residuals:
+plot(summary(model.delta.Cq)$residuals, main = "Residuals for fit", ylab = "residuals")
+```
+
+### Model prediction
+
+Values can be predicted with investr package. The mean.response should be set to TRUE. But one could argue that the intrinsic bias from the combinatoric data for model creation is not fit for a mean response and a individual response should be considered (mean.response = FALSE). This leads to enormous uncertainty around delta CQ of 0.
+
+```{r regression model prediction, echo=TRUE, message=FALSE, warning=FALSE}
+predictionValue <- 0
+
+res <- invest(model.delta.Cq, y0 = predictionValue, interval = "inversion", level = 0.95, mean.response = FALSE)
+
+plotFit(model.delta.Cq, interval = "both",
+         level = 0.95, shade = TRUE,
+         col.pred = "whitesmoke",
+         col.conf = "skyblue",
+         extend.range = TRUE,
+         xlab = "proportion of target genotype",
+         ylab = bquote(Delta*Cq))
+abline(h = predictionValue, v = c(res$lower, res$estimate, res$upper), lty = 2, lwd = 0.5, col = "salmon")
+```
+
+> For the prediction y = `r predictionValue` the model predicts a response of `r res$estimate` with upper `r res$upper` and lower `r res$lower` interval.
+
+
+## Regression analysis (Linearisation)
+
+**At this point all samples need to be numeric and represent a percentage!**
+
+All samples should be between 0 % and 100 %. Samples that are not numeric and between 0 to 100 will be skipped. 
+
+An overview can be plotted for different Cq types from data.Cq.
+
+```{r lin Cq diff plot 1, echo=TRUE, message=FALSE, warning=FALSE, fig.width=10, fig.height=3}
+plot.delta.Cq.overview(CqType = c("Regression", "Autocalculated"), linSqrtTrans = TRUE, xlab = "shifted square root transformation of proportion")
+```
+
+### Model generation
+
+The shifted square root transformation to linearise the data can be used with the parameter `linSqrtTrans = TRUE`
+
+```{r Cq diff regression sqrtLin, echo=TRUE, message=FALSE, warning=FALSE}
+regression.delta.Cq(CqType = "Regression", linSqrtTrans = TRUE, fit = "linear", cv = TRUE, cvComplete = TRUE)
+```
+
+### Model analysis
+
+The model can be analysed by standard methods:
+
+```{r lin regression model analysis, echo=TRUE, message=FALSE, warning=FALSE}
+# Model Summary:
+summary(model.delta.Cq)
+```
+
+### Model prediction
+
+Values can be predicted with investr package. The mean.response should be set to TRUE. But one could argue that the intrinsic bias from the combinatoric data for model creation is not fit for a mean response and a individual response should be considered (mean.response = FALSE). This leads to enormous uncertainty around delta CQ of 0.
+
+```{r lin regression model prediction, echo=TRUE, message=FALSE, warning=FALSE}
+predictionValue <- 0
+
+res <- invest(model.delta.Cq, y0 = predictionValue, interval = "inversion", level = 0.95, mean.response = FALSE)
+
+plotFit(model.delta.Cq, interval = "both",
+         level = 0.95, shade = TRUE,
+         col.pred = "whitesmoke",
+         col.conf = "skyblue",
+         extend.range = TRUE,
+         xlab = "proportion of target genotype",
+         ylab = bquote(Delta*Cq))
+abline(h = predictionValue, v = c(res$lower, res$estimate, res$upper), lty = 2, lwd = 0.5, col = "salmon")
+```
+
+> For the prediction y = `r predictionValue` the model predicts a response of `r reTransform(res$estimate)` with upper `r reTransform(res$upper)` and lower `r reTransform(res$lower)` interval.
+
+
+## TODO
+
+### Plot delta Cq values with prediction
+
+Again the typical box plot representation of delta Cq values but now with predictions from a regression model.
+
+**TODO**
+
+#### A Box Plot with prediction
+
+**TODO**
+
