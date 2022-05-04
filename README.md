@@ -18,6 +18,10 @@ The package provides some basic workflow but does not claim to be universal. You
 
 Install with devtools, tough I recommend to clone the repository and work with the raw code if you eg. want to adjust functions or reuse them in your code.
 
+`devtools::install_github("LucasFVoges/DoubleqpcR", build_vignettes = FALSE)`
+
+And to include the vignette, which is also accessible in the inst/test folder from here.
+
 `devtools::install_github("LucasFVoges/DoubleqpcR", build_vignettes = TRUE)`
 
 ## Idea
