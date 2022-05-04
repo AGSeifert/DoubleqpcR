@@ -4,13 +4,16 @@
 
 R Package accomodating research for DMAS-qPCR experiments.
 
-**WORK IN PROGRESS**  
-This package is still in preview status. Not all functionality is included jet. The first Version will be released when the corresponding publication is available in literature.
+The default branch `v1.x` will include the most recent release. 
+
+**NEWS**
+
+- 04.05.2022: **v1.0.0 Initial Release**
 
 ## About
 This package is designed for DMAS-qPCR data. The functions provided are useful for analysis and can handle .csv input in a specific format (see below). RDML format is not supported. This package provides the methods and functions used in the "Detection of almond adulteration by genotyping of sweet and bitter almonds (Prunus dulcis) with double-mismatch allele-specific qPCR (DMAS-qPCR)" study (LINK).
 
-A vignette (introduction) with the corresponding data from the publication listed above is available! The vignette is also available in inst/test dir with a [formatted html](https://raw.githack.com/LucasFVoges/DoubleqpcR/main/inst/test/test.html)
+A vignette (introduction) with the corresponding data from the publication listed above is available! The vignette is also available in inst/test dir with a [formatted html](https://raw.githack.com/LucasFVoges/DoubleqpcR/v1.x/inst/test/test.html)
 
 The package provides some basic workflow but does not claim to be universal. You may have to adapt certain functions for your purpose.
 
