@@ -5,6 +5,10 @@ vignette: >
   %\VignetteIndexEntry{introduction}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{gridExtra}
+  %\VignetteDepends{tidyquant}
+  %\VignetteDepends{ggplot2}
+  %\VignetteDepends{investr}  
 ---
 
 ```{r, include = FALSE}
@@ -16,7 +20,7 @@ knitr::opts_chunk$set(
 
 # Library DoubleqpcR
 
-```{r setup}
+```{r setup, include=FALSE}
 library(DoubleqpcR)
 
 library(gridExtra)

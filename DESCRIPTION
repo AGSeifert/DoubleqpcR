@@ -23,5 +23,6 @@ Imports:
     DT
 Suggests:
     rmarkdown,
-    tidyquant
+    tidyquant,
+    gridExtra
 VignetteBuilder: knitr
