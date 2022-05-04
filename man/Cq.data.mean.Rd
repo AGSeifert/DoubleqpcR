@@ -7,7 +7,7 @@
 \item helper function.
 }}
 \usage{
-Cq.data.mean(CqType = "SD", onlyNumeric = FALSE, return = FALSE)
+Cq.data.mean(CqType = NA, onlyNumeric = FALSE, return = FALSE)
 }
 \arguments{
 \item{CqType}{this is the Cq value columns from the input.cq that should be used.}

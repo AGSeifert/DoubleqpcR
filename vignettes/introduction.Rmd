@@ -266,17 +266,3 @@ abline(h = predictionValue, v = c(res$lower, res$estimate, res$upper), lty = 2, 
 ```
 
 > For the prediction y = `r predictionValue` the model predicts a response of `r reTransform(res$estimate)` with upper `r reTransform(res$upper)` and lower `r reTransform(res$lower)` interval.
-
-
-## TODO
-
-### Plot delta Cq values with prediction
-
-Again the typical box plot representation of delta Cq values but now with predictions from a regression model.
-
-**TODO**
-
-#### A Box Plot with prediction
-
-**TODO**
-

@@ -1,6 +1,6 @@
 Package: DoubleqpcR
-Title: DMAS qPCR analysis functions
-Version: 0.0.0.1
+Title: DMAS-qPCR data analysis
+Version: 1.0.0
 Authors@R:
     person("Lucas", "Voges", , "lucas.voges@chemie.uni-hamburg.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8433-8321"))

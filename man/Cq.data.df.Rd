@@ -7,7 +7,7 @@
 \item helper function.
 }}
 \usage{
-Cq.data.df(CqType = "SD", onlyNumeric = FALSE, return = FALSE)
+Cq.data.df(CqType = NA, onlyNumeric = FALSE, return = FALSE)
 }
 \arguments{
 \item{CqType}{this is the Cq value columns from the input.cq that should be used.}

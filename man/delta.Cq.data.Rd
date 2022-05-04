@@ -8,7 +8,7 @@
 }}
 \usage{
 delta.Cq.data(
-  CqType = "SD",
+  CqType = NA,
   method = "combinatorial",
   onlyNumeric = FALSE,
   return = FALSE

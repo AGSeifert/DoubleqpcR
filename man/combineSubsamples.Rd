@@ -6,6 +6,7 @@
 \usage{
 combineSubsamples(
   delimiter = ".",
+  useMeans = FALSE,
   outliers = TRUE,
   outliers.method = "Grubbs",
   alpha = 0.05,
@@ -15,6 +16,8 @@ combineSubsamples(
 }
 \arguments{
 \item{delimiter}{standard: "." wich seperates the base name from the subsample counter or name. "." can be problematic for decimal values. The FIRST Occourance of this delimiter will be used only. Everything after is trimmed.}
+
+\item{useMeans}{instead of combining all values, only combine the mean values of each subsample.}
 
 \item{outliers}{logical if outliers are to be deleted from the output}
 

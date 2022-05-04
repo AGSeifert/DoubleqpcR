@@ -51,16 +51,6 @@ table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), 
   ## get the maximal amount of samples.
   data.length <- max(length(containing.A), length(containing.B))
 
-  # make Sure they have the same length to paste them into the results!
-  if (length(containing.A) < data.length) {
-    miss <- data.length - containing.A
-    containing.A <- c(containing.A, c(rep(NA,miss)))
-  }
-  if (length(containing.B) < data.length) {
-    miss <- data.length - containing.B
-    containing.B <- c(containing.B, c(rep(NA,miss)))
-  }
-
 
   # generate empty result table
   result.table <- data.frame(matrix(ncol=0, nrow=data.length))
@@ -80,6 +70,16 @@ table.Cq <- function(sample = NA, target = "Genotype A", CqType = c("TP","SD"), 
       } else {
         stop("No such outlier method... enter 'Grubbs' or 'Dixon'.")
       }
+    }
+
+    # make Sure they have the same length to paste them into the results!
+    if (length(containing.A.value) < data.length) {
+      miss <- data.length - length(containing.A.value)
+      containing.A.value <- c(containing.A.value, c(rep(NA,miss)))
+    }
+    if (length(containing.B.value) < data.length) {
+      miss <- data.length - length(containing.B.value)
+      containing.B.value <- c(containing.B.value, c(rep(NA,miss)))
     }
 
     result.table[,paste0(type.n, ".", target)] <- containing.A.value

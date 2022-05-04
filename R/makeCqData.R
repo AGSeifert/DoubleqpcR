@@ -58,18 +58,30 @@ make.Cq.data <- function(add = FALSE, target = "Genotype A", CqType = c("TP","SD
 #' e.g. "100.1, 100.2, 100.a, 100.something" would be in the same sample "100" after.
 #'
 #' @param delimiter standard: "." wich seperates the base name from the subsample counter or name. "." can be problematic for decimal values. The FIRST Occourance of this delimiter will be used only. Everything after is trimmed.
+#' @param useMeans instead of combining all values, only combine the mean values of each subsample.
 #' @param outliers logical if outliers are to be deleted from the output
 #' @param outliers.method If a "Dixon" or "Grubbs" test should be used.
 #' @param alpha alpha for outlier testing (0.05 = 95% significance)
 #' @param outlier.range For Grubbs: input ignored, set to 6. For Dixon: This is only important for samples with 3 or less values. In this case the range of data (e.g. Range c(1,1.4,1.3) = 0.4) need to be at least outlier.range if an outlier test should happen. Normally outlier test for 3 or less values is not recommended. But this helps to get rid of clear outliers e.g. (2,2,30). My advice is to check the data also manually.
 #' @return nothing. changes data.Cq in global scope
 #' @export
-combineSubsamples <- function(delimiter = ".", outliers = TRUE, outliers.method = "Grubbs", alpha = 0.05, outlier.range = 3, silent = FALSE){
+combineSubsamples <- function(delimiter = ".", useMeans = FALSE, outliers = TRUE, outliers.method = "Grubbs", alpha = 0.05, outlier.range = 3, silent = FALSE){
   data <- list()
   for (sample in names(data.Cq)) {
     newsample <- trimws(sample, which = "r", whitespace = paste0("[", delimiter, "].*"))
     list <- list()
     list[[1]] <- eval(parse(text=paste0("data.Cq$'",sample,"'"))) # list of dataframes for all Cq Types.
+
+    # If means should be used:
+    if (useMeans){
+      list <- lapply(list, function(x){
+        lapply(x, function(y){
+          as.data.frame(lapply(y, mean, na.rm = TRUE))
+          })
+        })
+
+    }
+
     names(list) <- newsample
     if(newsample %in% names(data)){
       for (df in names(eval(parse(text=paste0("data$'",newsample,"'"))))) {
@@ -107,7 +119,7 @@ combineSubsamples <- function(delimiter = ".", outliers = TRUE, outliers.method 
 #' @param return standard=FALSE will write in global scope! Otherwise will return the dataframe.
 #' @return standard: returns nothing. Creates a dataframe or creates a a dataframe data.cq.sum in global scope
 #' @export
-Cq.data.mean <- function(CqType = "SD", onlyNumeric = FALSE, return = FALSE){
+Cq.data.mean <- function(CqType = NA, onlyNumeric = FALSE, return = FALSE){
 
   if(!exists("data.Cq")){ # Check if data.cq is available
     stop("No data.cq list available - please run make.cq.data()")
@@ -115,6 +127,10 @@ Cq.data.mean <- function(CqType = "SD", onlyNumeric = FALSE, return = FALSE){
 
   if(length(CqType) != 1){ # Check if CqType is only one type!
     stop("Cq Type needs to be only one!")
+  }
+
+  if(is.na(CqType)){
+    CqType <- names(data.Cq[[1]])[1]
   }
 
   # new data frame for return:
@@ -154,7 +170,7 @@ Cq.data.mean <- function(CqType = "SD", onlyNumeric = FALSE, return = FALSE){
 #' @param return standard=FALSE will write in global scope! Otherwise will return the dataframe.
 #' @return standard: returns nothing. Creates a dataframe or creates a a dataframe data.cq.sum in global scope
 #' @export
-Cq.data.df <- function(CqType = "SD", onlyNumeric = FALSE, return = FALSE){
+Cq.data.df <- function(CqType = NA, onlyNumeric = FALSE, return = FALSE){
 
   if(!exists("data.Cq")){ # Check if data.cq is available
     stop("No data.cq list available - please run make.cq.data()")
@@ -162,6 +178,10 @@ Cq.data.df <- function(CqType = "SD", onlyNumeric = FALSE, return = FALSE){
 
   if(length(CqType) != 1){ # Check if CqType is only one type!
     stop("Cq Type needs to be only one!")
+  }
+
+  if(is.na(CqType)){
+    CqType <- names(data.Cq[[1]])[1]
   }
 
   # new data frame for return:
@@ -203,7 +223,7 @@ Cq.data.df <- function(CqType = "SD", onlyNumeric = FALSE, return = FALSE){
 #' @param return standard=FALSE will write in global scope! Otherwise will return the dataframe.
 #' @return standard: returns nothing. Creates a dataframe or creates a a dataframe data.cq.sum in global scope
 #' @export
-delta.Cq.data <- function(CqType = "SD", method = "combinatorial", onlyNumeric = FALSE, return = FALSE){
+delta.Cq.data <- function(CqType = NA, method = "combinatorial", onlyNumeric = FALSE, return = FALSE){
 
   data <- Cq.data.df(CqType = CqType, onlyNumeric = onlyNumeric, return = TRUE)
 
