@@ -310,7 +310,8 @@ linSqrtTransform <- function(data){
 
 #' This Function will retransform a value / list etc to normal percentage / proportion
 #'
-#' The value(s) needs to be between -sqrt(50) and sqrt(50) or the returned value will not be correct.
+#' The value(s) needs to be between -sqrt(50) and sqrt(50).
+#' It is feasable to evaluate data also for 2*(+-sqrt(50)).
 #'
 #' - helper function.
 #'
@@ -318,10 +319,19 @@ linSqrtTransform <- function(data){
 #' @return returnes a dataframe
 #' @export
 reTransform <- function(value){
-  for (i in value) {
-    if (i > sqrt(50) | i < -sqrt(50)){
-      warning(paste("Value:", i ,"not in acceptable range!"))
+
+  # The retransformation as in the formula published.
+  result <- abs(((1+sign(value))/2) * 100 - (value - sign(value) * sqrt(50)) ^ 2)
+
+  # go over the whole dataset (for a single value its just one.)
+  for (i in length(value)) {
+    if (value[i] > 2*(sqrt(50)) | value[i] < 2*(-sqrt(50))){
+      warning(paste("Value:", value[i] ,"not in acceptable range - will be wrong predicted!"))
+    } else if (value[i] < -sqrt(50)){
+      result[i] <- -result[i]
+    } else if (value[i] > sqrt(50)){
+      result[i] <- 100+(100-result[i])
     }
   }
-  return(abs(((1+sign(value))/2) * 100 - (value - sign(value) * sqrt(50)) ^ 2))
+  return(result)
 }
