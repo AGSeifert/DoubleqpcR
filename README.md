@@ -46,9 +46,9 @@ where x is the shifted root of concentration (-sqrt(50) < x < sqrt(50)) and s_x 
 
 ## Documentation
 
-[overview drawio](https://user-images.githubusercontent.com/73955527/167864006-d3388a34-23ef-409f-b446-b7b7635b25b7.png)
+![overview drawio](https://user-images.githubusercontent.com/73955527/167864006-d3388a34-23ef-409f-b446-b7b7635b25b7.png)
 
-### Input Data!
+### Input Data
 
 
 The input data has to be in csv format (or for downstream analysis a R dataframe). Two types are needed:
