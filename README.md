@@ -46,9 +46,10 @@ where x is the shifted root of concentration (-sqrt(50) < x < sqrt(50)) and s_x 
 
 ## Documentation
 
-![overview drawio](https://user-images.githubusercontent.com/73955527/167816439-72f88e88-b417-4b28-8006-82bbefc0cce3.png)
+[overview drawio](https://user-images.githubusercontent.com/73955527/167864006-d3388a34-23ef-409f-b446-b7b7635b25b7.png)
 
-### Input Data
+### Input Data!
+
 
 The input data has to be in csv format (or for downstream analysis a R dataframe). Two types are needed:
   - Fluorescence table: raw fluorescence qPCR curve data (optional for some parts)
