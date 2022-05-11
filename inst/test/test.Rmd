@@ -294,19 +294,23 @@ combineSubsamples(delimiter = " ", useMeans = TRUE)
 data.Cq
 ```
 
-Note that in this case we have searched for outliers two times. When we make or add the data.Cq in one subsample and when combining all subsamples. If the means are used, then the means will be compared for outliers! So in this case it makes sense. If we work with `useMeans = FALSE` than the outlier test in the `make.Cq.data()` function should be turned of!
-
+Note that in this case we have searched for outliers two times. When we make or add the data.Cq in one subsample and when combining all subsamples. If the means are used, then the means will be compared for outliers! So in this case it makes sense. If we work with `useMeans = FALSE` than the outlier test in the `make.Cq.data()` function should be omitted!
 
 ### Plot delta Cq values with prediction
 
-Again the typical box plot representation of delta Cq values but now with predictions from a regression model.
+Again the typical box plot representation of delta Cq values but now we include the predictions from the previously generated regression model.
 
-**TODO**
+First we have to generate the delta Cq values (this will overwrite the delta.Cq dataframe from regression analysis)
+As the model in the environment we have to tell the prediction to reTransform the values. We also plot the P value from a t.test for the two boxplots. 
 
-#### A Box Plot with prediction
+```{r}
+delta.Cq.data(method = "combinatorial")
+plot.delta.Cq.box(useModel = TRUE, reTransform = TRUE, predictionRange = seq(-6,2,2), pVal = TRUE)
+```
 
-**TODO**
+**This should be an example** for possible Boxplot analysis. These functions do not have the goal to be complete or to cover all possibilities.
 
+Happy R-coding have a nice day!
 
 
 

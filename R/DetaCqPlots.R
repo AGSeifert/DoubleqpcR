@@ -2,14 +2,39 @@
 #'
 #' delta.Cq data frame has to be created before
 #'
-#' @import ggplot2
+#' It is possible to use the regression model to display a prediction axis.
+#' It is also possible to plot the P Values for a t.test of the boxplots.
+#'
+#' All these extra plot options can be manually done after returning the ggplot object for more customisation!
+#'
+#' @import ggplot2 ggpubr
 #' @param points Show individual datapoints? std TRUE
+#' @param useModel Use the regression model for predicition.
+#' @param predictionRange this vector will be used for the prediction. corresponds to the deltaCq y axis!
+#' @param reTransform If the linear transformation (linSqrtTransform) was used set to TRUE
+#' @param pVal Plots the P value from stat_compare_means (ggpubr) to the plot
+#' @param comparisons a list of 2 item vectors to define which P values are presented.
 #' @return returns a ggplot object.
 #' @export
-plot.delta.Cq.box <- function(points = TRUE){
+plot.delta.Cq.box <- function(points = TRUE, useModel = FALSE, predictionRange = seq(-8,8,2), reTransform = FALSE, pVal = FALSE, comparisons = list(c(1, 2))){
 
   if(!exists("delta.Cq")){ # Check if delta.Cq is available
     stop("No delta.cq list available - please run delta.Cq.data()")
+  }
+
+  # Get values for the second axis. (prediction from the model in global space)
+  if (useModel){
+    if (!exists("model.delta.Cq")){
+      return("Model not present, but useModel set TRUE")
+    } else {
+      scales.labels <- c()
+      for (val in predictionRange) {
+        scales.labels <- c(scales.labels, invest(model.delta.Cq, val, interval = "inversion", mean.response = TRUE, lower = -200, upper = 200)$estimate)
+      }
+    }
+    if (reTransform){
+      scales.labels <- round(reTransform(scales.labels),1)
+    }
   }
 
   p <- ggplot(delta.Cq, aes(x = factor(sample), y = delta.Cq)) +
@@ -21,6 +46,23 @@ plot.delta.Cq.box <- function(points = TRUE){
     p <- p +
       geom_jitter(col = "red", pch = 4, width = 0.2, alpha = 0.5)
   }
+
+  if (useModel) {
+    p  <- p + scale_y_continuous(
+      sec.axis = sec_axis(
+        ~ . ,
+        name = "model prediction [%]",
+        breaks = predictionRange,
+        labels = c(scales.labels)
+      ),
+      breaks = predictionRange
+    )
+  }
+
+  if (pVal) {
+    p <- p + stat_compare_means(method = "t.test", comparisons = comparisons)
+  }
+  #
 
   return(p)
 }

@@ -4,14 +4,34 @@
 \alias{plot.delta.Cq.box}
 \title{plots delta Cq values as box-plots}
 \usage{
-plot.delta.Cq.box(points = TRUE)
+plot.delta.Cq.box(
+  points = TRUE,
+  useModel = FALSE,
+  predictionRange = seq(-8, 8, 2),
+  reTransform = FALSE,
+  pVal = FALSE
+)
 }
 \arguments{
 \item{points}{Show individual datapoints? std TRUE}
+
+\item{useModel}{Use the regression model for predicition.}
+
+\item{predictionRange}{this vector will be used for the prediction. corresponds to the deltaCq y axis!}
+
+\item{reTransform}{If the linear transformation (linSqrtTransform) was used set to TRUE}
+
+\item{pVal}{Plots the p value from stat_compare_means (ggpubr) to the plot}
 }
 \value{
 returns a ggplot object.
 }
 \description{
 delta.Cq data frame has to be created before
+}
+\details{
+It is possible to use the regression model to display a prediction axis.
+It is also possible to plot the p Values for the boxplots.
+
+All these extra plot options can be manually done after returning the ggplot object for more customisation!
 }

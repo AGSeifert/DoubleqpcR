@@ -8,6 +8,9 @@ The default branch `v1.x` will include the most recent release.
 
 **NEWS**
 
+- 11.05.2022: **v1.0.1**
+  - updated vignette
+  - BoxPlot prediction included.
 - 04.05.2022: **v1.0.0 Initial Release**
 
 ## About
@@ -43,8 +46,7 @@ where x is the shifted root of concentration (-sqrt(50) < x < sqrt(50)) and s_x 
 
 ## Documentation
 
-![overview drawio](https://user-images.githubusercontent.com/73955527/166452505-61444692-5419-4585-b218-e849706b5875.png)
-
+![overview drawio](https://user-images.githubusercontent.com/73955527/167816439-72f88e88-b417-4b28-8006-82bbefc0cce3.png)
 
 ### Input Data
 
