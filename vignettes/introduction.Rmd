@@ -5,8 +5,6 @@ vignette: >
   %\VignetteIndexEntry{introduction}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteDepends{gridExtra}
-  %\VignetteDepends{tidyquant}
   %\VignetteDepends{ggplot2}
   %\VignetteDepends{investr}  
 ---
@@ -22,9 +20,6 @@ knitr::opts_chunk$set(
 
 ```{r setup, include=FALSE}
 library(DoubleqpcR)
-
-library(gridExtra)
-library(tidyquant)
 library(ggplot2)
 library(investr)
 calculateEverything = FALSE
@@ -32,6 +27,8 @@ calculateEverything = FALSE
 
 InputCq <- system.file("extdata", "rps4_8fach_cq.csv", package = "DoubleqpcR")
 InputWells <- system.file("extdata", "rps4_8fach.csv", package = "DoubleqpcR")
+bitterData <- system.file("extdata", "DMASqPCR_bitter_marzipan.csv", package = "DoubleqpcR")
+sweetData <- system.file("extdata", "DMASqPCR_sweet_marzipan.csv", package = "DoubleqpcR")
 ```
 
 ## Data Handling 
@@ -139,7 +136,7 @@ Therefore the sample name has to be a numeric value which corresponds to the tar
 ```{r cq efficiency plot, echo=TRUE, message=FALSE, warning=FALSE}
 plot <- plot.Cq.efficiency(CqType = "Regression")
 
-plot + theme_tq() + scale_fill_tq() + scale_colour_tq()
+plot
 ```
 
 ## Delta Cq Values
@@ -266,3 +263,57 @@ abline(h = predictionValue, v = c(res$lower, res$estimate, res$upper), lty = 2, 
 ```
 
 > For the prediction y = `r predictionValue` the model predicts a response of `r reTransform(res$estimate)` with upper `r reTransform(res$upper)` and lower `r reTransform(res$lower)` interval.
+
+## Example
+
+We look at an example from the study where we examined bitter and sweet almond samples. Here, two datasets from sweet M0 marzipan and from self-made bitter marzipan are used as an example. We use the regression analysis from before. The data in this part has no concentration and we do not look at the fluorescence data.
+
+### Import
+
+Let use first import the bitter marzipan data. The .csv table is manually saved from the .xlxs excel supporting data file. We can see that there are two errors. First the column names are not as described by the package which are automatically renamed and we can ignore this error. Secondly a warning about the genotype is presented. This is from the NTC measurement and we can delete this row. 
+
+Next we can add this data to the data.cq dataframe. Actually we make a new one, because we do not want to add the data to the regression data we did before.
+
+```{r}
+read.cqTable(csv = "DMASqPCR_bitter_marzipan.csv")
+
+input.cq <- input.cq[1:(nrow(input.cq)-1),]
+
+make.Cq.data(add = FALSE, target = "bitter", CqType = "Regression")
+```
+
+Additionally we can think about removing the "debittered 6" experiment as only values for one genotype are present. But here we just leave them be.
+
+Now we add the values from the sweet Marzipan experiment. Here we have a problem with the sample names as they are called "Marzipan1" and so on. we have to manually change it to "Marzipan 1" to be coherent with the other naming...
+
+```{r}
+read.cqTable(csv = "DMASqPCR_sweet_marzipan.csv")
+
+input.cq$sample <- sub("([0-9])"," \\1",input.cq$sample)
+
+make.Cq.data(add = TRUE, target = "bitter", CqType = "Regression")
+```
+Now we can combine our subsamples and have two entries in the data.Cq!
+
+```{r}
+combineSubsamples(delimiter = " ", useMeans = TRUE)
+data.Cq
+```
+
+Note that in this case we have searched for outliers two times. When we make or add the data.Cq in one subsample and when combining all subsamples. If the means are used, then the means will be compared for outliers! So in this case it makes sense. If we work with `useMeans = FALSE` than the outlier test in the `make.Cq.data()` function should be omitted!
+
+### Plot delta Cq values with prediction
+
+Again the typical box plot representation of delta Cq values but now we include the predictions from the previously generated regression model.
+
+First we have to generate the delta Cq values (this will overwrite the delta.Cq dataframe from regression analysis)
+As the model in the environment we have to tell the prediction to reTransform the values. We also plot the P value from a t.test for the two boxplots. 
+
+```{r}
+delta.Cq.data(method = "combinatorial")
+plot.delta.Cq.box(useModel = TRUE, reTransform = TRUE, predictionRange = seq(-6,2,2), pVal = TRUE)
+```
+
+**This should be an example** for possible Boxplot analysis. These functions do not have the goal to be complete or to cover all possibilities.
+
+Happy R-coding have a nice day!

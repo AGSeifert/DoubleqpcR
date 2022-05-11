@@ -1,6 +1,6 @@
 Package: DoubleqpcR
 Title: DMAS-qPCR data analysis
-Version: 1.0.0
+Version: 1.0.1
 Authors@R:
     person("Lucas", "Voges", , "lucas.voges@chemie.uni-hamburg.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8433-8321"))
@@ -20,7 +20,8 @@ Imports:
     knitr,
     drc,
     kableExtra,
-    DT
+    DT,
+    ggpubr
 Suggests:
     rmarkdown,
     tidyquant,
