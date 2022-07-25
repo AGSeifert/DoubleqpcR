@@ -131,3 +131,17 @@ plot.delta.Cq.overview <- function(CqType = c("SD","TP"), linSqrtTrans = FALSE, 
          ylim = yl)
   }
 }
+
+#' plots delta Cq values against the square root of the concentration
+#'
+#' will use the data.Cq list as input.
+#' Only numeric values will be used (100 = 100 % = "100")
+#'
+#' @param CqType list of Cq types that should be plotted.
+#' @param method to generate the delta Cq values. See delta.Cq.data()
+#' @param xlab x axis title for the plots.
+#' @return returns a R base plot.
+#' @export
+plot.delta.Cq.differences <- function(CqType = c("SD","TP"), method = "c", xlab = "mixture [%] target of interest"){
+
+}
