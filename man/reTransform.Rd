@@ -13,7 +13,8 @@ reTransform(value)
 returnes a dataframe
 }
 \description{
-The value(s) needs to be between -sqrt(50) and sqrt(50) or the returned value will not be correct.
+The value(s) needs to be between -sqrt(50) and sqrt(50).
+It is feasable to evaluate data also for 2*(+-sqrt(50)).
 }
 \details{
 \itemize{
