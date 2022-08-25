@@ -5,22 +5,19 @@
 \title{plots delta Cq values against the square root of the concentration}
 \usage{
 plot.delta.Cq.differences(
-  CqType = c("SD", "TP"),
-  method = "c",
-  xlab = "mixture [\%] target of interest"
+  xlab = "Percent of target genotype [\%]",
+  breaks = c(0, 5, 10, 20, 30, 40, 50)
 )
 }
 \arguments{
-\item{CqType}{list of Cq types that should be plotted.}
-
-\item{method}{to generate the delta Cq values. See delta.Cq.data()}
-
 \item{xlab}{x axis title for the plots.}
+
+\item{breaks}{list of x ticks / breaks}
 }
 \value{
 returns a R base plot.
 }
 \description{
-will use the data.Cq list as input.
-Only numeric values will be used (100 = 100 \% = "100")
+delta.Cq data frame has to be created before.
+Used the mean() and sd() base functions.
 }

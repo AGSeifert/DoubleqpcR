@@ -4,13 +4,14 @@
 
 R Package accomodating research for DMAS-qPCR experiments.
 
-The default branch `v1.x` will include the most recent release. 
+The default branch `v1.x` will include the most recent release.
 
 **NEWS**
 
 - 25.08.2022: **v1.0.2**
   - added v shaped difference plot
   - small updates in documentation
+  - prediction interval increased!
 - 11.05.2022: **v1.0.1**
 - 04.05.2022: **v1.0.0 Initial Release**
 
@@ -84,7 +85,7 @@ Sample is normally the experiment. It needs to be set to a number if later used 
 - `read.cqTable()` will read the Cq table.
 - `read.fluorescenceTable()` will read the fluorescence data.
 
-> only .csv at this point. 
+> only .csv at this point.
 
 ##### Cq calculation
 
@@ -118,7 +119,6 @@ Sample is normally the experiment. It needs to be set to a number if later used 
 
 - `plot.delta.Cq.box()` Boxplots
 - `plot.delta.Cq.overview()` Data overview
-- `plot.delta.Cq.differences` Show the difference Plots
 
 #### Regression Analsysis
 - `regression.delta.Cq()` will perform model generation, plot and cross validation

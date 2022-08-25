@@ -73,6 +73,7 @@ plot.delta.Cq.box <- function(points = TRUE, useModel = FALSE, predictionRange =
 #' will use the data.Cq list as input.
 #' Only numeric values will be used (100 = 100 % = "100")
 #'
+#' @import scales
 #' @param CqType list of Cq types that should be plotted.
 #' @param linSqrtTrans Will transform the values to linearise the values! this is basically a shifted square root representation.
 #' @param method to generate the delta Cq values. See delta.Cq.data()
@@ -134,14 +135,48 @@ plot.delta.Cq.overview <- function(CqType = c("SD","TP"), linSqrtTrans = FALSE, 
 
 #' plots delta Cq values against the square root of the concentration
 #'
-#' will use the data.Cq list as input.
-#' Only numeric values will be used (100 = 100 % = "100")
+#' delta.Cq data frame has to be created before.
+#' Used the mean() and sd() base functions.
 #'
-#' @param CqType list of Cq types that should be plotted.
-#' @param method to generate the delta Cq values. See delta.Cq.data()
 #' @param xlab x axis title for the plots.
+#' @param breaks list of x ticks / breaks
 #' @return returns a R base plot.
 #' @export
-plot.delta.Cq.differences <- function(CqType = c("SD","TP"), method = "c", xlab = "mixture [%] target of interest"){
+plot.delta.Cq.differences <- function(xlab = "Percent of target genotype [%]", breaks = c(0,5,10,20,30,40,50)){
+
+  if(!exists("delta.Cq")){ # Check if delta.Cq is available
+    stop("No delta.Cq available - please run delta.Cq.data()")
+  }
+
+  datapoints.new <- data.frame()
+  for (conc in unique(delta.Cq$sample)){
+    datapoints.new <- rbind(datapoints.new, data.frame(concentration = conc, diff = mean(delta.Cq$delta.Cq[which(delta.Cq$sample == conc)] ,na.rm = TRUE), sd = sd(delta.Cq$delta.Cq[which(delta.Cq$sample == conc)] ,na.rm = TRUE)))
+  }
+
+  # change the concentration to the opposite
+  datapoints.new$oppConcentration <- 100 - datapoints.new$concentration
+  datapoints.new$sqrtconc[datapoints.new$concentration < 50] <- datapoints.new$concentration[datapoints.new$concentration < 50]
+  datapoints.new$sqrtconc[datapoints.new$concentration > 50] <- datapoints.new$oppConcentration[datapoints.new$concentration > 50]
+
+
+  mysqrt_trans <<- function() {
+    trans_new("mysqrt",
+              transform = base::sqrt,
+              inverse = function(x) ifelse(x<0, 0, x^2),
+              domain = c(0, Inf))
+  }
+
+  p <- ggplot(datapoints.new, aes(sqrtconc, diff, ymin = diff-sd, ymax = diff+sd)) +
+    geom_hline(yintercept = 0, size = 0.4, color = "darkgrey") +
+    geom_linerange()+
+    geom_point(size = 4, shape = 21, fill = "lightblue") +
+    labs(x = xlab, y = bquote(Delta*Cq))+
+    theme(legend.position = "none") +
+    scale_y_continuous(limits = c(-8,7), breaks = c(-8:7)) +
+    scale_x_continuous(trans = "mysqrt", limits = c(0,NA), breaks = breaks)
+
+  return(p)
 
 }
+
+

@@ -145,6 +145,17 @@ head(delta.Cq)
 
 ### Plot delta Cq values
 
+The difference Plot for the target genotype with the other genotype and vice versa.
+
+```{r delta Cq V Plot, echo=TRUE, message=FALSE, warning=FALSE}
+plot <- plot.delta.Cq.differences() 
+plot + 
+  theme_bw() +
+  annotate("label", x = 40, y = 6, label = "bitter") +
+  annotate("label", x = 40, y = -7, label = "sweet")
+```
+
+
 A typical box plot representation of delta Cq values.
 This is of cause only for demonstration purposes as these plots can be made in various ways from the data with standard visualisation methods. (Obviously this makes no sense with "delta.Cq.data(method="mean")".
 
