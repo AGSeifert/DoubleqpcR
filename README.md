@@ -8,9 +8,10 @@ The default branch `v1.x` will include the most recent release.
 
 **NEWS**
 
+- 25.08.2022: **v1.0.2**
+  - added v shaped difference plot
+  - small updates in documentation
 - 11.05.2022: **v1.0.1**
-  - updated vignette
-  - BoxPlot prediction included.
 - 04.05.2022: **v1.0.0 Initial Release**
 
 ## About
@@ -46,7 +47,7 @@ where x is the shifted root of concentration (-sqrt(50) < x < sqrt(50)) and s_x 
 
 ## Documentation
 
-![overview drawio](https://user-images.githubusercontent.com/73955527/167864006-d3388a34-23ef-409f-b446-b7b7635b25b7.png)
+![overview drawio](https://user-images.githubusercontent.com/73955527/186659805-246e8f40-6193-45a8-bbd4-2f75d015eb6b.png)
 
 ### Input Data
 
@@ -117,6 +118,7 @@ Sample is normally the experiment. It needs to be set to a number if later used 
 
 - `plot.delta.Cq.box()` Boxplots
 - `plot.delta.Cq.overview()` Data overview
+- `plot.delta.Cq.differences` Show the difference Plots
 
 #### Regression Analsysis
 - `regression.delta.Cq()` will perform model generation, plot and cross validation
@@ -134,6 +136,10 @@ Packages used in this project:
 
 > Ritz, C.; Spiess, A.-N., qpcR: an R package for sigmoidal model selection in quantitative real-time polymerase chain reaction analysis. Bioinformatics **2008**, 24 (13), 1549-1551.
 
+- drc [PLOS ONE](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0146021)
+
+> Ritz C. et al., Dose-Response Analysis Using R, PLOS ONE, 10, 2015.
+
 - caret
 
 > Kuhn, M., Building Predictive Models in R Using the caret Package. Journal of Statistical Software **2008**, 28 (5), 1-26.
@@ -145,6 +151,14 @@ Packages used in this project:
 - ggplot2
 
 > Wickham, H., Ggplot2: Elegant graphics for data analysis. Springer-Verlag New York: 2016.
+
+- reshape2 [JStatSoft](http://www.jstatsoft.org/v21/i12/)
+
+> Wickham, H., Reshaping Data with the {reshape} Package. Journal of Statistical Software, 21, 2007.
+
+- scales [GitHub](https://github.com/r-lib/scales)
+
+> Wickham, H. and Seidel, D., scales: Scale Functions for Visualization. 2022.
 
 ## Cite
 If you want to cite this package please use the following citation:
