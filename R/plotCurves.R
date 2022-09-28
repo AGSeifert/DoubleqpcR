@@ -8,6 +8,18 @@
 #' @return a ggplot object
 #' @export
 plot.curve <- function(sample = "all", target = "Genotype A", color.target = "firebrick2", color.offtarget = "cornflowerblue"){
+
+  if(!exists("input.raw.melt.usedOnly")){
+    stop("No input.raw.melt.usedOnly list available - please run read.fluorescenceTable()")
+  }
+  if(nrow(input.raw.melt.usedOnly == 0)){
+    stop("input.raw.melt.usedOnly is empty - column header not identical?")
+  }
+  if(!exists("input.cq")){
+    stop("No input.cq list available - please run read.cqTable()")
+  }
+
+
   if(!is.na(sample)){
   if(sample == "all"){
     plot <- ggplot(input.raw.melt.usedOnly, aes(x = Cycle, y = value, col = variable)) +
