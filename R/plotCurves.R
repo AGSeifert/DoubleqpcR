@@ -8,6 +8,18 @@
 #' @return a ggplot object
 #' @export
 plot.curve <- function(sample = "all", target = "Genotype A", color.target = "firebrick2", color.offtarget = "cornflowerblue"){
+
+  if(!exists("input.raw.melt.usedOnly")){
+    stop("No input.raw.melt.usedOnly list available - please run read.fluorescenceTable()")
+  }
+  if(nrow(input.raw.melt.usedOnly == 0)){
+    stop("input.raw.melt.usedOnly is empty - column header not identical?")
+  }
+  if(!exists("input.cq")){
+    stop("No input.cq list available - please run read.cqTable()")
+  }
+
+
   if(!is.na(sample)){
   if(sample == "all"){
     plot <- ggplot(input.raw.melt.usedOnly, aes(x = Cycle, y = value, col = variable)) +
@@ -43,9 +55,12 @@ plot.curve <- function(sample = "all", target = "Genotype A", color.target = "fi
     # combines the wells, so that target is always first
     containing <- c(as.character(input.cq$well[input.cq$sample == sample & input.cq$type == target]), as.character(input.cq$well[input.cq$sample == sample & input.cq$type == offtarget]))
     containing.label <- containing
-    annotation.label <- c(1,length(containing)/2+1)
+    annotation.label <- c(1,length(containing)) #/2+1
     containing.label[annotation.label[1]] <- paste(containing.label[annotation.label[1]], "-", target)
     containing.label[annotation.label[2]] <- paste(containing.label[annotation.label[2]], "-", offtarget)
+
+    containing.A <- length(input.cq$well[input.cq$sample == sample & input.cq$type == target])
+    containing.B <- length(input.cq$well[input.cq$sample == sample & input.cq$type == offtarget])
 
     if(is.numeric(sample)){
       subt <- paste0("Experiment: ", sample, "% ", target , " : ", 100-as.numeric(sample), "% ", offtarget)
@@ -62,7 +77,7 @@ plot.curve <- function(sample = "all", target = "Genotype A", color.target = "fi
       ylim(min(input.raw.melt.usedOnly$value),pretty(max(input.raw.melt.usedOnly$value))[2]) +
       theme_light() +
       theme(legend.position = c(0.15,0.65), legend.key.size = unit(0, 'lines'), legend.background = element_rect(fill = "transparent", colour = NA)) +
-      scale_color_manual("Experiment well", breaks = containing, values = c(rep(color.target,length(containing)/2), rep(color.offtarget,length(containing)/2)), labels=containing.label)
+      scale_color_manual("Experiment well", breaks = containing, values = c(rep(color.target,containing.A), rep(color.offtarget,containing.B)), labels=containing.label)
 
   }
 

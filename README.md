@@ -7,6 +7,8 @@ R Package accomodating research for DMAS-qPCR experiments.
 The default branch `v1.x` will include the most recent release.
 
 **NEWS**
+- xx.xx.2022: **v1.0.3**
+  - plot.curve() fix for different sample sizes.
 
 - 25.08.2022: **v1.0.2**
   - added v shaped difference plot

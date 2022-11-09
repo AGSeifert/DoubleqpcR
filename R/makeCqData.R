@@ -57,7 +57,7 @@ make.Cq.data <- function(add = FALSE, target = "Genotype A", CqType = c("TP","SD
 #' This function will combine subsample with the same base name before a delimiter.
 #' e.g. "100.1, 100.2, 100.a, 100.something" would be in the same sample "100" after.
 #'
-#' @param delimiter standard: "." wich seperates the base name from the subsample counter or name. "." can be problematic for decimal values. The FIRST Occourance of this delimiter will be used only. Everything after is trimmed.
+#' @param delimiter standard: "." Regex wich seperates the base name from the subsample counter or name. "." can be problematic for decimal values. The FIRST Occourance of this delimiter will be used only. Everything after is trimmed. "0-9" is also possible to detect first number.
 #' @param useMeans instead of combining all values, only combine the mean values of each subsample.
 #' @param outliers logical if outliers are to be deleted from the output
 #' @param outliers.method If a "Dixon" or "Grubbs" test should be used.
