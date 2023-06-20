@@ -7,23 +7,24 @@ R Package accomodating research for DMAS-qPCR experiments.
 The default branch `v1.x` will include the most recent release.
 
 **NEWS**
+- 20.06.2023: **v1.0.4 Paper Release**
 - 09.11.2022: **v1.0.3**
-  - plot.curve() fix for different sample sizes.
-  - typos and description
-
 - 25.08.2022: **v1.0.2**
-  - added v shaped difference plot
-  - small updates in documentation
-  - prediction interval increased!
 - 11.05.2022: **v1.0.1**
 - 04.05.2022: **v1.0.0 Initial Release**
 
 ## About
-This package is designed for DMAS-qPCR data. The functions provided are useful for analysis and can handle .csv input in a specific format (see below). RDML format is not supported. This package provides the methods and functions used in the study (TODO: LINK).
+This package is designed for DMAS-qPCR data. The functions provided are useful for analysis and can handle .csv input in a specific format (see below). RDML format is not supported. This package provides the methods and functions used in the study:
+> Detection of almonds (*Prunus dulcis*) adulteration by genotyping of sweet and bitter almonds with double-mismatch allele-specific qPCR (DMAS-qPCR)
+https://www.sciencedirect.com/science/article/pii/S0956713523002669
+
+Abstract: The main ingredient in marzipan is sweet almonds (Prunus dulcis var. dulcis). Bitter almonds (Prunus dulcis var. amara) are also added to create a more intense flavour. In Germany the proportion of bitter almonds in marzipan is limited to a maximum of 12%. The use of debittered bitter almonds is prohibited. However, currently no analytical technique can reliably monitor compliance with this legal requirement. In this study we used next-generation sequencing technology to sequence the plastid genomes of six sweet cultivars (Larguetta, Ferragnes, Nonpareil, Carmel, Monterey, and Marcona) and six bitter almond batches of different origin (Iran, Morocco, Kyrgyzstan, Spain, Syria, and Turkey) to locate single nucleotide variants (SNVs). Sweet and bitter almonds share the same maternal lineage, but sequence variants on the plastid genome were present in most bitter almond populations. To exploit these differences for detection of bitter almonds in processed products, we used the double-mismatch allele-specific qPCR (DMAS-qPCR) for two polymorphic loci (rpoB, rps4). We provide evidence that the rps4 variant was detectable in almond raw pastes containing (debittered) bitter almonds, showing that the DNA sequence was sufficiently stable throughout food processing. A clear distinction from sweet almonds was observed for samples that contained at least 8% of bitter almonds. Our results present a promising approach to detect adulterations with bitter almonds in marzipan.
+
+### Package 
 
 A vignette (introduction) with the corresponding data from the publication listed above is available! The vignette is also available in inst/test dir with a [formatted html](https://raw.githack.com/LucasFVoges/DoubleqpcR/v1.x/inst/test/test.html)
 
-The package provides some basic workflow but does not claim to be universal. You may have to adapt certain functions for your purpose.
+The package provides some basic workflow but does not claim to be universal or a ready to use Workflow. You may have to adapt certain functions for your own purpose.
 
 ## Installation
 
@@ -54,7 +55,6 @@ where x is the shifted root of concentration (-sqrt(50) < x < sqrt(50)) and s_x 
 ![overview drawio](https://user-images.githubusercontent.com/73955527/186659805-246e8f40-6193-45a8-bbd4-2f75d015eb6b.png)
 
 ### Input Data
-
 
 The input data has to be in csv format (or for downstream analysis a R dataframe). Two types are needed:
   - Fluorescence table: raw fluorescence qPCR curve data (optional for some parts)
@@ -167,5 +167,12 @@ Packages used in this project:
 If you want to cite this package please use the following citation:
 
 ```
-TODO
+Nils Wax, Lucas F. Voges, Sören H. Wenck, Jana L. Herold, Stephan Seifert, Markus Fischer,
+Detection of almonds (Prunus dulcis) adulteration by genotyping of sweet and bitter almonds with double-mismatch allele-specific qPCR (DMAS-qPCR),
+Food Control,
+Volume 152,
+2023,
+109866,
+ISSN 0956-7135,
+https://doi.org/10.1016/j.foodcont.2023.109866.
 ```
