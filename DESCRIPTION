@@ -27,4 +27,3 @@ Suggests:
     rmarkdown,
     tidyquant,
     gridExtra
-VignetteBuilder: knitr
