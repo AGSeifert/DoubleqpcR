@@ -1,5 +1,8 @@
 navbar:
   components:
-    intro:
+    articles:
       text: Example
-      href: assets/vignette.html
+      href: vignette.html
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
