@@ -2,10 +2,12 @@ Package: DoubleqpcR
 Title: DMAS-qPCR data analysis
 Version: 1.0.3
 Authors@R:
-    person("Lucas", "Voges", , "lucas.voges@chemie.uni-hamburg.de", role = c("aut", "cre"),
+    person("Lucas F.", "Voges", , "lucas.voges@chemie.uni-hamburg.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8433-8321"))
 Description: DMAS qPCR analysis functions
 License: MIT + file LICENSE
+URL: https://agseifert.github.io/DoubleqpcR/,
+    https://github.com/AGSeifert/DoubleqpcR/
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
