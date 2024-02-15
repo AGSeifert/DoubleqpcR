@@ -24,7 +24,7 @@ Abstract: The main ingredient in marzipan is sweet almonds (Prunus dulcis var. d
 
 ### Package 
 
-A vignette (introduction) with the corresponding data from the publication listed above is available! The vignette is also available in inst/test dir with a [formatted html](https://raw.githack.com/LucasFVoges/DoubleqpcR/v1.x/inst/test/test.html)
+A vignette (introduction) with the corresponding data from the publication listed above is available! The vignette is also available in inst/test dir with a [formatted html](https://raw.githack.com/AGSeifert/DoubleqpcR/v1.x/inst/test/test.html)
 
 The package provides some basic workflow but does not claim to be universal or a ready to use Workflow. You may have to adapt certain functions for your own purpose.
 
