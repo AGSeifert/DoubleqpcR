@@ -1,0 +1,5 @@
+navbar:
+  components:
+    intro:
+      text: Example
+      href: assets/vignette.html
